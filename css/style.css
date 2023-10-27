@@ -1,0 +1,17 @@
+:root {
+  --accent-1: hsl(290, 62%, 25%);
+  --accent-2: hsl(290, 62%, 33%);
+  --surface-1: hsl(0, 0%, 10%);
+  --surface-2: hsl(0, 0%, 20%);
+  --text-1: hsl(0, 0%, 90%);
+  --text-2: hsl(0, 0%, 80%);
+}
+
+* {
+  box-sizing: border-box;
+}
+
+html {
+  color: var(--text-1);
+  background-color: var(--surface-1);
+}
