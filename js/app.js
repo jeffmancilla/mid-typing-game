@@ -82,7 +82,7 @@ const INIT_STATE = {
   timeouts: {},
   interval: 2000,
   gameId: 0,
-  words: [],
+  words: ['sadf','sdfsdf','sdfsfsfdsf','wqeryu'],
 }
 // variables
 
@@ -95,6 +95,7 @@ let level
 // const playButton = document.querySelector('#play')
 const categoryOptions = document.querySelector('select')
 const wordInput = document.querySelector('#typing')
+const lanesSection = document.querySelectorAll('#lanes > div')
 
 // listeners
 
@@ -103,7 +104,7 @@ wordInput.addEventListener('keydown', (e) => {
     e.preventDefault()
     console.log(e.target.value)
 
-    const wordEl = document.querySelectorAll('#screen > div > div')
+    const wordEl = document.querySelectorAll('#lanes > div > div')
     console.log(wordEl)
     wordEl.forEach((word) => {
       if (word.innerText === e.target.value) {
@@ -125,21 +126,20 @@ const createCategories = () => {
     categoryOptions.appendChild(newOptionEl)
   }
 }
-/**
- *
- * @param {number} num
- */
+
 const getRandomNumber = (num) => {
   return Math.floor(Math.random() * num)
 }
 
 const spawnWord = () => {
-  for (const key in WORD_BANK) {
-    if (key === key) {
-      console.log('generate key')
-    }
-  }
+
+    const newWordDiv = document.createElement('div')
+    newWordDiv.innerText = state.words.pop()
+    console.log(newWordDiv)
+    console.log(lanesSection[0])
+    lanesSection[0].appendChild(newWordDiv)
 }
+
 const destroyWord = (el) => {
   el.remove()
 }

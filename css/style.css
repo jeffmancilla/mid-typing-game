@@ -42,19 +42,19 @@ html {
   align-items: center;
 }
 
-#screen {
+#lanes {
   display: flex;
   gap: 4rem;
   padding: 2rem;
 }
 
-#screen > div {
+#lanes > div {
   border: 1px solid var(--text-2);
   height: var(--distance-1);
   width: var(--distance-1)
 }
 
-/* #screen > div > div {
+/* #lanes > div > div {
   position: absolute;
   transform: translateY(var(--distance-y));
   transition: transform linear 3s;
