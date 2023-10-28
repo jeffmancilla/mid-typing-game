@@ -8,14 +8,14 @@ The player is given a set amount of words and difficulty will increase over time
 
 ## User Stories
 
-1. as a Player, i want to be able to start the game when i am ready
-1. as a Player, i want to be able to read the rules on how to play the game
 1. as a Player, i want words to spawn on the screen
 1. as a Player, i want to be able to type words into an input field as a way destroy words on the screen
 1. as a Player, i want the words to spawn one-at-a-time at a set interval
 1. as a Player, i want the words to spawn from the top of the screen and to fall to the bottom of the screen
 1. as a Player, i want the game to end if a word falls to the bottom of the screen
 1. as a Player, i want the words to randomly spawn at a random spot from the top of the screen
+1. as a Player, i want to be able to start the game when i am ready
+1. as a Player, i want to be able to read the rules on how to play the game
 1. as a Player, i do not want the same word appearing multiple times on the screen
 
 ## A wireframe of your "main" game screen.
