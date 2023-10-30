@@ -108,6 +108,12 @@ const typingInput = document.querySelector('#typing')
 
 // listeners
 
+bodyEl.addEventListener('keydown', (e) => {
+  if (e.key === 'Escape') {
+    e.preventDefault()
+  }
+})
+
 rulesButton.addEventListener('click', () => {
   menuDialog.close()
   rulesDialog.showModal()
@@ -133,9 +139,9 @@ typingInput.addEventListener('keydown', (e) => {
       if (word.innerText === e.target.value) {
         console.log(`yeet`)
         destroyWord(word)
+        return
       }
     })
-    console.log(`bruh`)
     e.target.value = null
   }
 })
@@ -212,12 +218,13 @@ const loadGame = () => {
 }
 
 const init = () => {
+  buildMenu()
   createCategories()
+  
   // load assets
   difficulty = 1
   state = { ...INIT_STATE }
   // load menu
-  buildMenu()
 }
 // game loop
 

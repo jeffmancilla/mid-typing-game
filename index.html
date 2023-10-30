@@ -3,16 +3,22 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Mid Typing Game</title>
+    <title>Mid Typing</title>
     <link rel="stylesheet" href="css/style.css" />
   </head>
   <script defer src="js/app.js"></script>
   <body>
     <dialog id="main-menu">
-      <h1>Mid Typing Game</h1>
+      <div class="title">
+        <span class="title-ends">M</span>
+        <span class="title-middle">ID TYPIN</span>
+        <span class="title-ends">G</span>
+      </div>
       <select id="category"></select>
-      <button id="play">Play</button>
-      <button id="rules">Rules</button>
+      <div id="main-menu-options">
+        <button id="play">Play</button>
+        <button id="rules">Rules</button>
+      </div>
     </dialog>
     <dialog id="rules-menu">
       <p>
@@ -25,9 +31,8 @@
         mollit anim id est laborum.
       </p>
       <button id="menu">Back to menu</button>
-
     </dialog>
-    <div class="flex-column">
+    <div id="">
       <section id="ui">
         <!-- <select id="categories"></select>
         <button type="submit" id="play" autofocus>Play</button> -->

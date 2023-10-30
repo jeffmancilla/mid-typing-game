@@ -1,4 +1,4 @@
-@import url('https://fonts.googleapis.com/css2?family=Comic+Neue&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=EB+Garamond&display=swap');
 
 :root {
   --accent-1: hsl(290, 62%, 25%);
@@ -6,35 +6,72 @@
   --surface-1: hsl(0, 0%, 10%);
   --surface-2: hsl(0, 0%, 20%);
   --text-1: hsl(0, 0%, 90%);
-  --text-2: hsl(0, 0%, 80%);
+  --text-2: hsl(40, 80%, 60%);
   --distance-1: 15rem;
   --distance-2: 20rem;
 }
 ::backdrop {
-  background-image: radial-gradient(
-    circle at center,
-    gainsboro,
-    gray 0,
-    black 100%
-  );
-  opacity: 0.95;
+  background: black;
 }
 
 html {
   color: var(--text-1);
   background-color: var(--surface-1);
-  font-family: 'Comic Neue', sans-serif;
-  /* margin: 0 auto; */
+  font-family: 'EB Garamond', serif;
 }
 
-/* #menu {
-  display: flex;
-  flex-direction: column;
-  gap: 1rem;
-} */
+dialog,
+button,
+select {
+  border: none;
+  background: none;
+  font-family: 'EB Garamond', serif;
+  color: var(--text-2);
+}
 
-#category > option {
-  text-align: center;
+#main-menu {
+  background: none;
+  border: none;
+}
+
+#main-menu > * {
+  display: block;
+  margin: 3rem auto;
+  animation-name: fadeIn;
+  animation-duration: 3s;
+}
+
+@keyframes fadeIn {
+  0% {
+    opacity: 0;
+  }
+  50% {
+    opacity: 0;
+  }
+}
+
+.title * {
+  vertical-align: middle;
+}
+.title-ends {
+  font-size: 4rem;
+}
+.title-middle {
+  font-size: 3rem;
+  margin: -0.4rem;
+}
+
+#main-menu-options > *,
+#category {
+  display: block;
+  padding: 0.5rem 4rem;
+  margin: 0 auto;
+  font-size: 1rem;
+  text-transform: uppercase;
+}
+
+button:hover {
+  background: radial-gradient(darkslategray, black, black, black);
 }
 
 .flex-column {
@@ -49,6 +86,11 @@ html {
   padding: 2rem;
 }
 
+#typing {
+  text-align: center;
+  font-size: 1rem;
+}
+
 #lanes > div {
   border: 1px solid var(--text-2);
   height: var(--distance-2);
@@ -56,9 +98,10 @@ html {
 }
 
 .word {
-  position: absolute;
   border: 1px solid white;
-  padding: .5rem;
+  background-color: var(--accent-1);
+  padding: 0.5rem;
+  position: absolute;
   animation-name: fallDown;
   animation-timing-function: linear;
   opacity: 0;
@@ -70,10 +113,6 @@ html {
   }
   100% {
     transform: translateY(var(--distance-2));
-    opacity: 1
+    opacity: 1;
   }
-}
-#typing {
-  text-align: center;
-  font-size: 1rem;
 }
