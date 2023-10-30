@@ -8,6 +8,7 @@
   --text-1: hsl(0, 0%, 90%);
   --text-2: hsl(0, 0%, 80%);
   --distance-1: 24rem;
+  --distance-2: 32rem;
 }
 ::backdrop {
   background-image: radial-gradient(
@@ -50,21 +51,26 @@ html {
 
 #lanes > div {
   border: 1px solid var(--text-2);
-  height: var(--distance-1);
-  width: var(--distance-1)
+  height: var(--distance-2);
+  width: var(--distance-1);
 }
 
 .word {
   position: absolute;
-  /* transform: translateY(var(--distance-1));
-  transition-property: transform;
-  transition-duration: 2s;
-  transition-timing-function: linear; */
+  border: 1px solid white;
+  padding: .5rem;
   animation-name: fallDown;
   animation-timing-function: linear;
+  opacity: 0;
 }
-@keyframes fallDown{
-  to{transform: translateY(var(--distance-1))}
+@keyframes fallDown {
+  5% {
+    opacity: 1;
+  }
+  100% {
+    transform: translateY(var(--distance-2));
+    opacity: 1
+  }
 }
 #typing {
   text-align: center;

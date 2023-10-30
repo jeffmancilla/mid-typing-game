@@ -79,7 +79,7 @@ const WORD_BANK = {
 }
 
 const INIT_STATE = {
-  timeouts: {}, //timeoutIds
+  timeouts: [], // stashing timeoutIDs
   delay: 2000,
   weight: 10,
   gameId: 0, //intervalId
@@ -96,24 +96,24 @@ let difficulty
 // const menuDialog = document.querySelector('#menu')
 const playButton = document.querySelector('#play')
 const categoryOptions = document.querySelector('select')
-const wordInput = document.querySelector('#typing')
+const typingInput = document.querySelector('#typing')
 const lanesSection = document.querySelectorAll('#lanes > div')
 
 // listeners
 
-wordInput.addEventListener('keydown', (e) => {
+typingInput.addEventListener('keydown', (e) => {
   if (e.key === ' ' || e.key === 'Enter' || e.key === 'Tab') {
     e.preventDefault()
-    console.log(e.target.value)
+    typingInput.removeAttribute('placeholder')
 
     const wordEl = document.querySelectorAll('#lanes > div > div')
-    console.log(wordEl)
     wordEl.forEach((word) => {
       if (word.innerText === e.target.value) {
-        console.log('match')
+        console.log(`yeet`)
         destroyWord(word)
       }
     })
+    console.log(`bruh`)
     e.target.value = null
   }
 })
@@ -132,39 +132,7 @@ const getRandomNumber = (num) => {
   return Math.floor(Math.random() * num)
 }
 
-// initial stuff
-const createCategories = () => {
-  for (const key in WORD_BANK) {
-    appendNewElement('option', categoryOptions, key)
-  }
-}
-
-// in game
-const spawnWord = () => {
-  const newWordDiv = document.createElement('div')
-  newWordDiv.innerText = state.words.pop()
-  newWordDiv.classList.add('word')
-  newWordDiv.style.animationDuration = `${state.weight}s`
-  lanesSection[0].appendChild(newWordDiv)
-  t
-}
-
-const destroyWord = (el) => {
-  el.remove()
-}
-// game loop stuff
-const startGame = () => {
-  if (state.words.length > 0) {
-    spawnWord()
-  }
-}
-const loadGame = () => {
-  //getDifficulty
-  //set interval
-  state.weight = difficulty
-  state.words = ['lorem', 'ipsum', 'dolor', 'sit', 'amet']
-  state.gameId = setInterval(startGame, state.delay)
-}
+// in game stuff
 
 const gameOver = () => {
   clearInterval(gameId)
@@ -172,6 +140,42 @@ const gameOver = () => {
     clearTimeout(state.timeouts[key])
   }
 }
+
+const spawnWord = () => {
+  const newWordDiv = document.createElement('div')
+  newWordDiv.innerText = state.words.pop()
+  newWordDiv.classList.add('word')
+  console.log(state.weight)
+  newWordDiv.style.animationDuration = `${state.weight}s`
+  lanesSection[0].appendChild(newWordDiv)
+}
+
+const destroyWord = (el) => {
+  clearTimeout(el.target)
+  el.remove()
+}
+
+// game loop stuff
+const createCategories = () => {
+  for (const key in WORD_BANK) {
+    appendNewElement('option', categoryOptions, key)
+  }
+}
+
+const startGame = () => {
+  if (state.words.length > 0) {
+    spawnWord()
+  }
+}
+const loadGame = () => {
+  //getDifficulty
+
+  state.weight
+  // build randomized word array
+  state.words = ['lorem', 'ipsum', 'dolor', 'sit', 'amet']
+  state.gameId = setInterval(startGame, state.delay)
+}
+
 const init = () => {
   createCategories()
   // load assets
@@ -179,6 +183,7 @@ const init = () => {
   state = { ...INIT_STATE }
   // load menu
   playButton.addEventListener('click', () => {
+    typingInput.removeAttribute('disabled')
     loadGame()
   })
 }
