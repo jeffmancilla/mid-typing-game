@@ -54,12 +54,18 @@ html {
   width: var(--distance-1)
 }
 
-/* #lanes > div > div {
+.word {
   position: absolute;
-  transform: translateY(var(--distance-y));
-  transition: transform linear 3s;
-} */
-
+  /* transform: translateY(var(--distance-1));
+  transition-property: transform;
+  transition-duration: 2s;
+  transition-timing-function: linear; */
+  animation-name: fallDown;
+  animation-timing-function: linear;
+}
+@keyframes fallDown{
+  to{transform: translateY(var(--distance-1))}
+}
 #typing {
   text-align: center;
   font-size: 2rem;

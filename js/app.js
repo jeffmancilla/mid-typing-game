@@ -79,20 +79,21 @@ const WORD_BANK = {
 }
 
 const INIT_STATE = {
-  timeouts: {},
-  interval: 2000,
-  gameId: 0,
-  words: ['sadf','sdfsdf','sdfsfsfdsf','wqeryu'],
+  timeouts: {}, //timeoutIds
+  delay: 2000,
+  weight: 10,
+  gameId: 0, //intervalId
+  words: [],
+  score: 0
 }
 // variables
-
 let state
-let level
+let difficulty
 
 // elements
 
 // const menuDialog = document.querySelector('#menu')
-// const playButton = document.querySelector('#play')
+const playButton = document.querySelector('#play')
 const categoryOptions = document.querySelector('select')
 const wordInput = document.querySelector('#typing')
 const lanesSection = document.querySelectorAll('#lanes > div')
@@ -118,6 +119,7 @@ wordInput.addEventListener('keydown', (e) => {
 
 // functions
 
+// helpers
 const createCategories = () => {
   for (const key in WORD_BANK) {
     console.log(key)
@@ -131,21 +133,32 @@ const getRandomNumber = (num) => {
   return Math.floor(Math.random() * num)
 }
 
+// in game
 const spawnWord = () => {
-
-    const newWordDiv = document.createElement('div')
-    newWordDiv.innerText = state.words.pop()
-    console.log(newWordDiv)
-    console.log(lanesSection[0])
-    lanesSection[0].appendChild(newWordDiv)
+  const newWordDiv = document.createElement('div')
+  newWordDiv.innerText = state.words.pop()
+  newWordDiv.classList.add('word')
+  newWordDiv.style.animationDuration = `${state.weight}s`
+  lanesSection[0].appendChild(newWordDiv)
 }
 
 const destroyWord = (el) => {
   el.remove()
 }
-const gameStart = () => {
-  spawnWord()
+// game loop stuff
+const startGame = () => {
+  if (state.words.length > 0) {
+    spawnWord()
+  }
 }
+const loadGame = () => {
+  //getDifficulty
+  //set interval
+  state.weight =  difficulty 
+  state.words = ['lorem','ipsum','dolor','sit','amet']
+  state.gameId = setInterval(startGame, state.delay)
+}
+
 const gameOver = () => {
   clearInterval(gameId)
   for (const key in state.timeouts) {
@@ -153,13 +166,27 @@ const gameOver = () => {
   }
 }
 const init = () => {
-  state = { ...INIT_STATE }
-  state.gameId = setInterval(gameStart, state.interval)
+    createCategories()
+    // load assets
+    difficulty = 1
+    state = { ...INIT_STATE }
+  // load menu
+  playButton.addEventListener('click', () => {
+    loadGame()
+  })
 }
+// game loop
 
-// game
-
-// createCategories()
+// init
+// - menu
+// - get difficulty
+// - set state.interval ()
+// - set words[]
+// - start game (spawn words based on interval)
+//   - if words[].length === 0
+//     - init
+//   - setTimeOuts that execute after set delay should trigger game over
+//   - if words
 // menuDialog.showModal()
 // playButton.addEventListener('click', () => {
 //   menuDialog.close()
