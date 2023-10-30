@@ -1,7 +1,7 @@
 // constants
 
 const WORD_BANK = {
-  object: [
+  'object methods': [
     'assign',
     'create',
     'defineProperties',
@@ -32,7 +32,7 @@ const WORD_BANK = {
     'valueOf',
     'values',
   ],
-  array: [
+  'array methods': [
     'at',
     'concat',
     'copyWithin',
@@ -88,18 +88,40 @@ const INIT_STATE = {
   count: 1,
 }
 // variables
+
 let state
 let difficulty
 
 // elements
 
-// const menuDialog = document.querySelector('#menu')
+const bodyEl = document.querySelector('body')
+
+const menuDialog = document.querySelector('#main-menu')
+const categorySelect = document.querySelector('#category')
+const rulesDialog = document.querySelector('#rules-menu')
 const playButton = document.querySelector('#play')
-const categoryOptions = document.querySelector('select')
-const typingInput = document.querySelector('#typing')
+const rulesButton = document.querySelector('#rules')
+const menuButton = document.querySelector('#menu')
+
 const lanesSection = document.querySelectorAll('#lanes > div')
+const typingInput = document.querySelector('#typing')
 
 // listeners
+
+rulesButton.addEventListener('click', () => {
+  menuDialog.close()
+  rulesDialog.showModal()
+})
+menuButton.addEventListener('click', (e) => {
+  rulesDialog.close()
+  menuDialog.showModal()
+})
+playButton.addEventListener('click', () => {
+  menuDialog.close()
+  console.dir(menuDialog)
+  typingInput.removeAttribute('disabled')
+  loadGame()
+})
 
 typingInput.addEventListener('keydown', (e) => {
   if (e.key === ' ' || e.key === 'Enter' || e.key === 'Tab') {
@@ -121,7 +143,12 @@ typingInput.addEventListener('keydown', (e) => {
 // FUNCTIONS
 
 // helpers
-
+/**
+ *
+ * @param {HTMLElementTagNameMap} element
+ * @param {Document} parentElement
+ * @param {string} html
+ */
 const appendNewElement = (element, parentElement, html) => {
   const newEl = document.createElement(element)
   newEl.innerHTML = html
@@ -158,8 +185,12 @@ const destroyWord = (el) => {
 // game loop stuff
 const createCategories = () => {
   for (const key in WORD_BANK) {
-    appendNewElement('option', categoryOptions, key)
+    appendNewElement('option', categorySelect, key)
   }
+}
+
+const buildMenu = () => {
+  menuDialog.showModal()
 }
 
 const startGame = () => {
@@ -169,10 +200,14 @@ const startGame = () => {
 }
 const loadGame = () => {
   //getDifficulty
+  //getSelectedCategory
+  // state.words = ['lorem', 'ipsum', 'dolor', 'sit', 'amet']
+  state.words = WORD_BANK[categorySelect.selectedOptions[0].innerText]
 
   state.weight
   // build randomized word array
-  state.words = ['lorem', 'ipsum', 'dolor', 'sit', 'amet']
+  typingInput.setAttribute('autofocus', '')
+
   state.gameId = setInterval(startGame, state.delay)
 }
 
@@ -182,10 +217,7 @@ const init = () => {
   difficulty = 1
   state = { ...INIT_STATE }
   // load menu
-  playButton.addEventListener('click', () => {
-    typingInput.removeAttribute('disabled')
-    loadGame()
-  })
+  buildMenu()
 }
 // game loop
 
@@ -199,8 +231,4 @@ const init = () => {
 //     - init
 //   - setTimeOuts that execute after set delay should trigger game over
 //   - if words
-// menuDialog.showModal()
-// playButton.addEventListener('click', () => {
-//   menuDialog.close()
-// })
 init()

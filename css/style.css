@@ -7,8 +7,8 @@
   --surface-2: hsl(0, 0%, 20%);
   --text-1: hsl(0, 0%, 90%);
   --text-2: hsl(0, 0%, 80%);
-  --distance-1: 24rem;
-  --distance-2: 32rem;
+  --distance-1: 15rem;
+  --distance-2: 20rem;
 }
 ::backdrop {
   background-image: radial-gradient(
@@ -27,13 +27,13 @@ html {
   /* margin: 0 auto; */
 }
 
-#menu {
+/* #menu {
   display: flex;
   flex-direction: column;
   gap: 1rem;
-}
+} */
 
-#categories > option {
+#category > option {
   text-align: center;
 }
 
@@ -63,6 +63,7 @@ html {
   animation-timing-function: linear;
   opacity: 0;
 }
+
 @keyframes fallDown {
   5% {
     opacity: 1;
@@ -74,5 +75,5 @@ html {
 }
 #typing {
   text-align: center;
-  font-size: 2rem;
+  font-size: 1rem;
 }
