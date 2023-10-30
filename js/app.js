@@ -84,7 +84,8 @@ const INIT_STATE = {
   weight: 10,
   gameId: 0, //intervalId
   words: [],
-  score: 0
+  score: 0,
+  count: 1,
 }
 // variables
 let state
@@ -117,20 +118,25 @@ wordInput.addEventListener('keydown', (e) => {
   }
 })
 
-// functions
+// FUNCTIONS
 
 // helpers
-const createCategories = () => {
-  for (const key in WORD_BANK) {
-    console.log(key)
-    const newOptionEl = document.createElement('option')
-    newOptionEl.innerText = key
-    categoryOptions.appendChild(newOptionEl)
-  }
+
+const appendNewElement = (element, parentElement, html) => {
+  const newEl = document.createElement(element)
+  newEl.innerHTML = html
+  parentElement.appendChild(newEl)
 }
 
 const getRandomNumber = (num) => {
   return Math.floor(Math.random() * num)
+}
+
+// initial stuff
+const createCategories = () => {
+  for (const key in WORD_BANK) {
+    appendNewElement('option', categoryOptions, key)
+  }
 }
 
 // in game
@@ -140,6 +146,7 @@ const spawnWord = () => {
   newWordDiv.classList.add('word')
   newWordDiv.style.animationDuration = `${state.weight}s`
   lanesSection[0].appendChild(newWordDiv)
+  t
 }
 
 const destroyWord = (el) => {
@@ -154,8 +161,8 @@ const startGame = () => {
 const loadGame = () => {
   //getDifficulty
   //set interval
-  state.weight =  difficulty 
-  state.words = ['lorem','ipsum','dolor','sit','amet']
+  state.weight = difficulty
+  state.words = ['lorem', 'ipsum', 'dolor', 'sit', 'amet']
   state.gameId = setInterval(startGame, state.delay)
 }
 
@@ -166,10 +173,10 @@ const gameOver = () => {
   }
 }
 const init = () => {
-    createCategories()
-    // load assets
-    difficulty = 1
-    state = { ...INIT_STATE }
+  createCategories()
+  // load assets
+  difficulty = 1
+  state = { ...INIT_STATE }
   // load menu
   playButton.addEventListener('click', () => {
     loadGame()
