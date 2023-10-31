@@ -115,6 +115,7 @@ const playButton = document.querySelector('#play')
 const rulesButton = document.querySelector('#rules')
 const rulesMenuButton = document.querySelector('#menu1')
 const ripMenuButton = document.querySelector('#menu2')
+const winMenuButton = document.querySelector('#menu3')
 
 const lanesSection = document.querySelectorAll('#lanes > div')
 const typingInput = document.querySelector('#typing')
