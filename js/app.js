@@ -1,3 +1,4 @@
+// /@ts-check
 // constants
 
 const WORD_BANK = {
@@ -124,7 +125,7 @@ const typingInput = document.querySelector('#typing')
 
 /**
  *
- * @param {HTMLElementTagNameMap} element
+ * @param {keyof HTMLElementTagNameMap} element
  * @param {Document} parentElement
  * @param {string} html
  */
@@ -270,13 +271,13 @@ const loadGame = () => {
 }
 
 const init = () => {
-  // load assets
   // build states
   state = { ...INIT_STATE }
   // load menu
   menuDialog.showModal()
 }
 
+// load assets
 buildCategories()
 buildDifficulties()
 init()

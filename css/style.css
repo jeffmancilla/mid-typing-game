@@ -36,7 +36,8 @@ button,
 select,
 #main-menu,
 #rules-menu,
-#rip {
+#rip, 
+#win {
   border: none;
   background: none;
   font-family: 'EB Garamond', serif;
@@ -48,15 +49,15 @@ select,
 
 h1 * {
   vertical-align: middle;
-  display: inline;
   color: var(--text-2);
   text-transform: uppercase;
-  font-size: 2rem;
+  display: inline-block;
+  font-size: 2.2rem;
+  margin: -0.3rem;
 }
 
 h1 > span:first-child,
 h1 > span:last-child {
-  margin: -0.4rem;
   font-size: 3rem;
 }
 
