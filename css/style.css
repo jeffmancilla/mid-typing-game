@@ -27,6 +27,12 @@ dialog * {
 }
 
 button,
+select {
+  text-transform: uppercase;
+  padding: 1 2rem;
+}
+
+button,
 select,
 #main-menu,
 #rules-menu,
@@ -35,34 +41,39 @@ select,
   background: none;
   font-family: 'EB Garamond', serif;
   margin: auto;
-  text-transform: uppercase;
   color: var(--text-3);
+  font-weight: 500;
 }
 
-.title * {
+
+h1 * {
+  vertical-align: middle;
   display: inline;
   color: var(--text-2);
-  vertical-align: middle;
-  margin-bottom: 5rem;
+  text-transform: uppercase;
+  font-size: 2rem;
 }
 
-.title-ends {
-  font-size: 4rem;
-}
-.title-middle {
-  font-size: 3rem;
+h1 > span:first-child,
+h1 > span:last-child {
   margin: -0.4rem;
+  font-size: 3rem;
 }
 
 #rip > span {
   color: darkred;
+  text-transform: uppercase;
+  font-size: 3rem;
+}
+#win > span {
+  color: var(--text-2);
+  text-transform: uppercase;
   font-size: 3rem;
 }
 
 button:hover {
-  background: radial-gradient(var(--surface-1), black, black);
+  background: radial-gradient(var(--surface-2), var(--surface-1), black, black);
 }
-
 
 /* animations */
 dialog {
@@ -81,10 +92,10 @@ dialog {
     transform: scale(95%, 95%);
     opacity: 0;
   }
-  25% {
+  20% {
     opacity: 0;
   }
-  50% {
+  40% {
     opacity: 1;
   }
 }

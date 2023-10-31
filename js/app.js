@@ -1,6 +1,7 @@
 // constants
 
 const WORD_BANK = {
+  test: ['thequickbrownfoxjumpsoverthelazydog', 'hi'],
   'object methods': [
     'assign',
     'create',
@@ -79,14 +80,13 @@ const WORD_BANK = {
 }
 
 const INIT_STATE = {
-  timeouts: [], // stashing timeoutIDs
-  delay: 3000,
-  weight: 15,
-  gameId: 0, //intervalId
+  timeouts: [], // for stashing timeoutIds
+  delay: 3000, // milliseconds
+  weight: 15, // seconds
   words: [],
   score: 0,
   count: 1,
-  difficulty: 1,
+  difficulty: 1, //difficulty multiplier
 }
 
 const DIFFICULTY = {
@@ -97,7 +97,8 @@ const DIFFICULTY = {
 // variables
 
 let state
-let isGameOver
+let levelComplete
+let gameId
 
 // elements
 
@@ -105,7 +106,8 @@ const bodyEl = document.querySelector('body')
 
 const menuDialog = document.querySelector('#main-menu')
 const rulesDialog = document.querySelector('#rules-menu')
-const ripDialog = document.querySelector('#rip')
+const loseDialog = document.querySelector('#rip')
+const winDialog = document.querySelector('#win')
 
 const categorySelect = document.querySelector('#category')
 const difficultySelect = document.querySelector('#difficulty')
@@ -131,8 +133,22 @@ const appendNewElement = (element, parentElement, html) => {
   parentElement.appendChild(newEl)
 }
 
-const getRandomNumber = (num) => {
-  return Math.floor(Math.random() * num)
+/**
+ *
+ * @param {number} n
+ * @returns {number} integer max n
+ */
+const getRandomNumber = (n) => {
+  return Math.floor(Math.random() * n)
+}
+
+const clearTimers = () => {
+  console.log(`clearing interval ${gameId}`)
+  clearInterval(gameId)
+  console.log(`clearing timeout ${levelComplete}`)
+  clearTimeout(levelComplete)
+  console.dir(state.timeouts)
+  state.timeouts.forEach((timeout) => clearTimeout(timeout))
 }
 
 // listeners
@@ -141,7 +157,7 @@ const getRandomNumber = (num) => {
 bodyEl.addEventListener('keydown', (e) => {
   if (e.key === 'Escape') {
     e.preventDefault()
-  } 
+  }
 })
 
 playButton.addEventListener('click', () => {
@@ -158,11 +174,13 @@ rulesMenuButton.addEventListener('click', () => {
   menuDialog.showModal()
 })
 ripMenuButton.addEventListener('click', () => {
-  ripDialog.close()
-  menuDialog.showModal()
+  loseDialog.close()
+  init()
 })
-
-
+winMenuButton.addEventListener('click', () => {
+  winDialog.close()
+  init()
+})
 
 typingInput.addEventListener('keydown', (e) => {
   if (e.key === ' ' || e.key === 'Enter' || e.key === 'Tab') {
@@ -172,7 +190,6 @@ typingInput.addEventListener('keydown', (e) => {
     const wordEl = document.querySelectorAll('#lanes > div > div')
     wordEl.forEach((word) => {
       if (word.innerText === e.target.value) {
-        console.log(`yeet`)
         destroyWord(word)
         return
       }
@@ -185,25 +202,24 @@ typingInput.addEventListener('keydown', (e) => {
 
 // in game stuff
 
-const gameOver = () => {
-  clearInterval(gameId)
-  for (const key in state.timeouts) {
-    clearTimeout(state.timeouts[key])
-  }
-}
-
 const spawnWord = () => {
+  const weightSeconds = state.weight
+  const weightMilliseconds = state.weight * 1000
   const newWordDiv = document.createElement('div')
   newWordDiv.innerText = state.words.pop()
   newWordDiv.classList.add('word')
-  console.log(state.weight)
-  newWordDiv.style.animationDuration = `${state.weight}s`
+  newWordDiv.setAttribute('id', `${state.timeouts.length}`)
+  newWordDiv.style.animationDuration = `${weightSeconds}s`
   lanesSection[0].appendChild(newWordDiv)
+  state.timeouts.push(setTimeout(loseGame, weightMilliseconds))
 }
 
+/**
+ *
+ * @param {HTMLDivElement} el
+ */
 const destroyWord = (el) => {
-  console.dir(el)
-  clearTimeout(el.target)
+  clearInterval(state.timeouts[el.id])
   el.remove()
 }
 
@@ -216,46 +232,50 @@ const buildCategories = () => {
 const buildDifficulties = () => {
   for (const key in DIFFICULTY) {
     appendNewElement('option', difficultySelect, key)
-    console.log(key)
   }
 }
 
-const buildMenu = () => {
-  menuDialog.showModal()
-}
-
-const startGame = () => {
+const runGame = () => {
   if (state.words.length > 0) {
     spawnWord()
   }
+  if (state.words.length === 0) {
+    console.log(`win timer set`)
+    levelComplete = setTimeout(winGame, state.weight * 1000 + 1000)
+    clearInterval(gameId)
+  }
 }
-
-const endGame = () => {
-  ripDialog.showModal()
+const loseGame = () => {
+  clearTimers()
+  loseDialog.showModal()
+}
+const winGame = () => {
+  clearTimers()
+  winDialog.showModal()
 }
 
 const loadGame = () => {
-  //getDifficulty
-  //getSelectedCategory
+  // get selected category
   state.words = WORD_BANK[categorySelect.selectedOptions[0].innerText]
+  // randomize words
+
+  // get difficulty, set weights, delays
   state.difficulty = DIFFICULTY[difficultySelect.selectedOptions[0].innerText]
   state.weight /= state.difficulty
   state.delay /= state.difficulty
-  // build randomized word array
 
-  state.gameId = setInterval(startGame, state.delay)
-  isGameOver = setTimeout(endGame, 2000)
+  //start game
+  gameId = setInterval(runGame, state.delay)
 }
 
 const init = () => {
-  buildMenu()
-  buildCategories()
-  buildDifficulties()
-
   // load assets
-  isGameOver = false
+  // build states
   state = { ...INIT_STATE }
   // load menu
+  menuDialog.showModal()
 }
 
+buildCategories()
+buildDifficulties()
 init()
