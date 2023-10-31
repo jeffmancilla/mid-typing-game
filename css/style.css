@@ -7,6 +7,7 @@
   --surface-2: hsl(0, 0%, 20%);
   --text-1: hsl(0, 0%, 90%);
   --text-2: hsl(40, 80%, 60%);
+  --text-3: hsl(0, 0%, 50%);
   --distance-1: 15rem;
   --distance-2: 20rem;
 }
@@ -20,43 +21,31 @@ html {
   font-family: 'EB Garamond', serif;
 }
 
-dialog,
+/* menu related */
+dialog * {
+  display: block;
+}
+
 button,
-select {
+select,
+#main-menu,
+#rules-menu,
+#rip {
   border: none;
   background: none;
   font-family: 'EB Garamond', serif;
-  color: var(--text-2);
-}
-
-#main-menu {
-  background: none;
-  border: none;
-}
-
-#main-menu > * {
-  display: block;
-  margin: 3rem auto;
-  animation-name: fadeIn;
-  animation-duration: 10s;
-}
-
-@keyframes fadeIn {
-  0% {
-    transform: scale(95%, 95%);
-    opacity: 0;
-  }
-  15% {
-    opacity: 0;
-  }
-  50% {
-    opacity: 1;
-  }
+  margin: auto;
+  text-transform: uppercase;
+  color: var(--text-3);
 }
 
 .title * {
+  display: inline;
+  color: var(--text-2);
   vertical-align: middle;
+  margin-bottom: 5rem;
 }
+
 .title-ends {
   font-size: 4rem;
 }
@@ -65,18 +54,39 @@ select {
   margin: -0.4rem;
 }
 
-#main-menu-options > *,
-#category {
-  display: block;
-  padding: 0.5rem 4rem;
-  margin: 0 auto;
-  font-size: 1rem;
-  text-transform: uppercase;
-  color: gray;
+#rip > span {
+  color: darkred;
+  font-size: 3rem;
 }
 
 button:hover {
   background: radial-gradient(var(--surface-1), black, black);
+}
+
+
+/* animations */
+dialog {
+  animation-name: fadeIn;
+  animation-duration: 5s;
+}
+
+#rip > span,
+.title {
+  animation-name: fadeIn;
+  animation-duration: 3s;
+}
+
+@keyframes fadeIn {
+  0% {
+    transform: scale(95%, 95%);
+    opacity: 0;
+  }
+  25% {
+    opacity: 0;
+  }
+  50% {
+    opacity: 1;
+  }
 }
 
 #in-game {
@@ -94,6 +104,7 @@ button:hover {
 #typing {
   text-align: center;
   font-size: 1rem;
+  background-color: var(--surface-2);
 }
 
 #lanes > div {
@@ -101,6 +112,7 @@ button:hover {
   width: var(--distance-1);
 }
 
+/* words */
 .word {
   background-color: var(--accent-1);
   padding: 0.5rem;

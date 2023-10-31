@@ -80,54 +80,89 @@ const WORD_BANK = {
 
 const INIT_STATE = {
   timeouts: [], // stashing timeoutIDs
-  delay: 2000,
-  weight: 10,
+  delay: 3000,
+  weight: 15,
   gameId: 0, //intervalId
   words: [],
   score: 0,
   count: 1,
+  difficulty: 1,
+}
+
+const DIFFICULTY = {
+  'new game': 1,
+  'new game+': 2,
+  'new game++': 3,
 }
 // variables
 
 let state
-let difficulty
+let isGameOver
 
 // elements
 
 const bodyEl = document.querySelector('body')
 
 const menuDialog = document.querySelector('#main-menu')
-const categorySelect = document.querySelector('#category')
 const rulesDialog = document.querySelector('#rules-menu')
+const ripDialog = document.querySelector('#rip')
+
+const categorySelect = document.querySelector('#category')
+const difficultySelect = document.querySelector('#difficulty')
 const playButton = document.querySelector('#play')
 const rulesButton = document.querySelector('#rules')
-const menuButton = document.querySelector('#menu')
+const rulesMenuButton = document.querySelector('#menu1')
+const ripMenuButton = document.querySelector('#menu2')
 
 const lanesSection = document.querySelectorAll('#lanes > div')
 const typingInput = document.querySelector('#typing')
 
+// UTILITY FUNCTIONS
+
+/**
+ *
+ * @param {HTMLElementTagNameMap} element
+ * @param {Document} parentElement
+ * @param {string} html
+ */
+const appendNewElement = (element, parentElement, html) => {
+  const newEl = document.createElement(element)
+  newEl.innerHTML = html
+  parentElement.appendChild(newEl)
+}
+
+const getRandomNumber = (num) => {
+  return Math.floor(Math.random() * num)
+}
+
 // listeners
 
+// needed a way to remove using the escape key to close a <dialog>
 bodyEl.addEventListener('keydown', (e) => {
   if (e.key === 'Escape') {
     e.preventDefault()
-  }
+  } 
 })
 
+playButton.addEventListener('click', () => {
+  menuDialog.close()
+  typingInput.removeAttribute('disabled')
+  loadGame()
+})
 rulesButton.addEventListener('click', () => {
   menuDialog.close()
   rulesDialog.showModal()
 })
-menuButton.addEventListener('click', (e) => {
+rulesMenuButton.addEventListener('click', () => {
   rulesDialog.close()
   menuDialog.showModal()
 })
-playButton.addEventListener('click', () => {
-  menuDialog.close()
-  console.dir(menuDialog)
-  typingInput.removeAttribute('disabled')
-  loadGame()
+ripMenuButton.addEventListener('click', () => {
+  ripDialog.close()
+  menuDialog.showModal()
 })
+
+
 
 typingInput.addEventListener('keydown', (e) => {
   if (e.key === ' ' || e.key === 'Enter' || e.key === 'Tab') {
@@ -146,24 +181,7 @@ typingInput.addEventListener('keydown', (e) => {
   }
 })
 
-// FUNCTIONS
-
-// helpers
-/**
- *
- * @param {HTMLElementTagNameMap} element
- * @param {Document} parentElement
- * @param {string} html
- */
-const appendNewElement = (element, parentElement, html) => {
-  const newEl = document.createElement(element)
-  newEl.innerHTML = html
-  parentElement.appendChild(newEl)
-}
-
-const getRandomNumber = (num) => {
-  return Math.floor(Math.random() * num)
-}
+// OTHER FUNCTIONS
 
 // in game stuff
 
@@ -184,14 +202,21 @@ const spawnWord = () => {
 }
 
 const destroyWord = (el) => {
+  console.dir(el)
   clearTimeout(el.target)
   el.remove()
 }
 
-// game loop stuff
-const createCategories = () => {
+// overarching game thangs (need to label this properly)
+const buildCategories = () => {
   for (const key in WORD_BANK) {
     appendNewElement('option', categorySelect, key)
+  }
+}
+const buildDifficulties = () => {
+  for (const key in DIFFICULTY) {
+    appendNewElement('option', difficultySelect, key)
+    console.log(key)
   }
 }
 
@@ -204,38 +229,33 @@ const startGame = () => {
     spawnWord()
   }
 }
+
+const endGame = () => {
+  ripDialog.showModal()
+}
+
 const loadGame = () => {
   //getDifficulty
   //getSelectedCategory
-  // state.words = ['lorem', 'ipsum', 'dolor', 'sit', 'amet']
   state.words = WORD_BANK[categorySelect.selectedOptions[0].innerText]
-
-  state.weight
+  state.difficulty = DIFFICULTY[difficultySelect.selectedOptions[0].innerText]
+  state.weight /= state.difficulty
+  state.delay /= state.difficulty
   // build randomized word array
-  typingInput.setAttribute('autofocus', '')
 
   state.gameId = setInterval(startGame, state.delay)
+  isGameOver = setTimeout(endGame, 2000)
 }
 
 const init = () => {
   buildMenu()
-  createCategories()
-  
+  buildCategories()
+  buildDifficulties()
+
   // load assets
-  difficulty = 1
+  isGameOver = false
   state = { ...INIT_STATE }
   // load menu
 }
-// game loop
 
-// init
-// - menu
-// - get difficulty
-// - set state.interval ()
-// - set words[]
-// - start game (spawn words based on interval)
-//   - if words[].length === 0
-//     - init
-//   - setTimeOuts that execute after set delay should trigger game over
-//   - if words
 init()
