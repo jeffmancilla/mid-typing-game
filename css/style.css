@@ -38,15 +38,19 @@ select {
   display: block;
   margin: 3rem auto;
   animation-name: fadeIn;
-  animation-duration: 3s;
+  animation-duration: 10s;
 }
 
 @keyframes fadeIn {
   0% {
+    transform: scale(95%, 95%);
+    opacity: 0;
+  }
+  15% {
     opacity: 0;
   }
   50% {
-    opacity: 0;
+    opacity: 1;
   }
 }
 
@@ -68,13 +72,14 @@ select {
   margin: 0 auto;
   font-size: 1rem;
   text-transform: uppercase;
+  color: gray;
 }
 
 button:hover {
-  background: radial-gradient(darkslategray, black, black, black);
+  background: radial-gradient(var(--surface-1), black, black);
 }
 
-.flex-column {
+#in-game {
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -92,13 +97,11 @@ button:hover {
 }
 
 #lanes > div {
-  border: 1px solid var(--text-2);
   height: var(--distance-2);
   width: var(--distance-1);
 }
 
 .word {
-  border: 1px solid white;
   background-color: var(--accent-1);
   padding: 0.5rem;
   position: absolute;
