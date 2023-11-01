@@ -2,7 +2,107 @@
 // constants
 
 const WORD_BANK = {
-  test: ['thequickbrownfoxjumpsoverthelazydog', 'hi'],
+  'common words': [
+    'the',
+    'be',
+    'to',
+    'of',
+    'and',
+    'a',
+    'in',
+    'that',
+    'have',
+    'it',
+    'for',
+    'not',
+    'on',
+    'with',
+    'he',
+    'as',
+    'you',
+    'do',
+    'at',
+    'this',
+    'but',
+    'his',
+    'by',
+    'from',
+    'they',
+    'we',
+    'say',
+    'she',
+    'or',
+    'an',
+    'will',
+    'my',
+    'one',
+    'all',
+    'would',
+    'there',
+    'their',
+    'what',
+    'so',
+    'up',
+    'out',
+    'if',
+    'about',
+    'who',
+    'get',
+    'which',
+    'go',
+    'me',
+    'when',
+    'make',
+    'can',
+    'like',
+    'time',
+    'no',
+    'just',
+    'him',
+    'know',
+    'take',
+    'people',
+    'into',
+    'year',
+    'your',
+    'good',
+    'some',
+    'could',
+    'them',
+    'see',
+    'other',
+    'than',
+    'then',
+    'now',
+    'look',
+    'only',
+    'come',
+    'its',
+    'over',
+    'think',
+    'also',
+    'back',
+    'after',
+    'use',
+    'two',
+    'how',
+    'our',
+    'work',
+    'first',
+    'well',
+    'way',
+    'even',
+    'new',
+    'want',
+    'because',
+    'any',
+    'these',
+    'give',
+    'day',
+    'most',
+    'us',
+    'her',
+  ],
   'object methods': [
     'assign',
     'create',
@@ -184,21 +284,46 @@ winMenuButton.addEventListener('click', () => {
   init()
 })
 
-typingInput.addEventListener('keydown', (e) => {
-  if (e.key === ' ' || e.key === 'Enter' || e.key === 'Tab') {
-    e.preventDefault()
-    typingInput.removeAttribute('placeholder')
-
+bodyEl.addEventListener('keydown', (e) => {
+  e.preventDefault()
+  if (
+    e.key === 'CapsLock' ||
+    e.key === 'Control' ||
+    e.key === 'Alt' ||
+    e.key === 'Shift' ||
+    e.key === 'Escape' ||
+    e.key === 'Delete'
+  ) {
+    return
+  } else if (e.key === 'Backspace') {
+    const valueString = `${typingInput.value}`
+    typingInput.value = valueString.slice(0, valueString.length - 1)
+  } else if (e.key === ' ' || e.key === 'Enter' || e.key === 'Tab') {
     const wordEl = document.querySelectorAll('#lanes > div > div')
     wordEl.forEach((word) => {
-      if (word.innerText === e.target.value) {
+      if (word.innerText === typingInput.value) {
         destroyWord(word)
-        return
       }
     })
-    e.target.value = null
+    typingInput.value = null
+  } else {
+    typingInput.value += e.key
   }
 })
+// typingInput.addEventListener('keydown', (e) => {
+//   if (e.key === ' ' || e.key === 'Enter' || e.key === 'Tab') {
+//     e.preventDefault()
+
+//     const wordEl = document.querySelectorAll('#lanes > div > div')
+//     wordEl.forEach((word) => {
+//       if (word.innerText === e.target.value) {
+//         destroyWord(word)
+//         return
+//       }
+//     })
+//     e.target.value = null
+//   }
+// })
 
 // OTHER FUNCTIONS
 
