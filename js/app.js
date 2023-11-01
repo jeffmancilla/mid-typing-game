@@ -2,6 +2,7 @@
 // constants
 
 const WORD_BANK = {
+  tutorial: ['the', 'quick', 'brown', 'fox', 'jumps', 'over', 'lazy', 'dog'],
   'common words': [
     'the',
     'be',
@@ -180,21 +181,22 @@ const WORD_BANK = {
   ],
 }
 
-const INIT_STATE = {
-  timeouts: [], // for stashing timeoutIds
-  delay: 3000, // milliseconds
-  weight: 15, // seconds
-  words: [],
-  score: 0,
-  count: 1,
-  difficulty: 1, //difficulty multiplier
-}
-
 const DIFFICULTY = {
   'new game': 1,
   'new game+': 2,
   'new game++': 3,
+  'new game+7': 7,
 }
+
+const INIT_STATE = {
+  words: [],
+  timeouts: [], // for stashing timeoutIds
+  delay: 3000, // milliseconds
+  weight: 15, // seconds
+  difficulty: 1, //difficulty multiplier
+  score: 0,
+}
+
 // variables
 
 let state
@@ -220,6 +222,9 @@ const winMenuButton = document.querySelector('#menu3')
 
 const lanesSection = document.querySelectorAll('#lanes > div')
 const typingInput = document.querySelector('#typing')
+
+const ripAudio = document.querySelector('#rip-audio')
+console.dir(ripAudio)
 
 // UTILITY FUNCTIONS
 
@@ -253,15 +258,9 @@ const clearTimers = () => {
   state.timeouts.forEach((timeout) => clearTimeout(timeout))
 }
 
-// listeners
+// LISTENERS
 
-// needed a way to remove using the escape key to close a <dialog>
-bodyEl.addEventListener('keydown', (e) => {
-  if (e.key === 'Escape') {
-    e.preventDefault()
-  }
-})
-
+// buttons
 playButton.addEventListener('click', () => {
   menuDialog.close()
   typingInput.removeAttribute('disabled')
@@ -284,8 +283,21 @@ winMenuButton.addEventListener('click', () => {
   init()
 })
 
+// needed a way to remove using the escape key to close a <dialog>
 bodyEl.addEventListener('keydown', (e) => {
+  if (e.key === 'Escape') {
+    e.preventDefault()
+  }
+})
+
+// capture keydown events
+bodyEl.addEventListener('keydown', (e) => {
+  // still want my browser refresh and dev tools!
+  if (e.key === 'F5' || e.key === 'F12') {
+    return
+  }
   e.preventDefault()
+  // ignore these keys
   if (
     e.key === 'CapsLock' ||
     e.key === 'Control' ||
@@ -295,10 +307,14 @@ bodyEl.addEventListener('keydown', (e) => {
     e.key === 'Delete'
   ) {
     return
-  } else if (e.key === 'Backspace') {
+  }
+  // reallow user to backspace out of typed keys
+  else if (e.key === 'Backspace') {
     const valueString = `${typingInput.value}`
     typingInput.value = valueString.slice(0, valueString.length - 1)
-  } else if (e.key === ' ' || e.key === 'Enter' || e.key === 'Tab') {
+  }
+  // typed word match condition
+  else if (e.key === ' ' || e.key === 'Enter' || e.key === 'Tab') {
     const wordEl = document.querySelectorAll('#lanes > div > div')
     wordEl.forEach((word) => {
       if (word.innerText === typingInput.value) {
@@ -306,10 +322,14 @@ bodyEl.addEventListener('keydown', (e) => {
       }
     })
     typingInput.value = null
-  } else {
+  }
+  // add key to text input element
+  else {
     typingInput.value += e.key
   }
 })
+
+// old way to track player inputs
 // typingInput.addEventListener('keydown', (e) => {
 //   if (e.key === ' ' || e.key === 'Enter' || e.key === 'Tab') {
 //     e.preventDefault()
@@ -328,17 +348,20 @@ bodyEl.addEventListener('keydown', (e) => {
 // OTHER FUNCTIONS
 
 // in game stuff
-
 const spawnWord = () => {
   const weightSeconds = state.weight
   const weightMilliseconds = state.weight * 1000
+  // pop a word out of the words array and generate a new word element with it
   const newWordDiv = document.createElement('div')
   newWordDiv.innerText = state.words.pop()
   newWordDiv.classList.add('word')
   newWordDiv.setAttribute('id', `${state.timeouts.length}`)
   newWordDiv.style.animationDuration = `${weightSeconds}s`
-  lanesSection[0].appendChild(newWordDiv)
-  state.timeouts.push(setTimeout(loseGame, weightMilliseconds))
+  // drop word into a lane
+  const randomIndex = getRandomNumber(lanesSection.length)
+  lanesSection[randomIndex].appendChild(newWordDiv)
+  // create a gameover timeout that triggers at the same time as the word completes it's drop animation
+  // state.timeouts.push(setTimeout(loseGame, weightMilliseconds))
 }
 
 /**
@@ -347,6 +370,7 @@ const spawnWord = () => {
  */
 const destroyWord = (el) => {
   clearInterval(state.timeouts[el.id])
+  // calculate score
   el.remove()
 }
 
@@ -382,9 +406,10 @@ const winGame = () => {
 }
 
 const loadGame = () => {
-  // get selected category
-  state.words = WORD_BANK[categorySelect.selectedOptions[0].innerText]
-  // randomize words
+  // get selected category, randomize words
+  state.words = WORD_BANK[categorySelect.selectedOptions[0].innerText].toSorted(
+    () => 0.5 - Math.random()
+  )
 
   // get difficulty, set weights, delays
   state.difficulty = DIFFICULTY[difficultySelect.selectedOptions[0].innerText]
@@ -398,6 +423,8 @@ const loadGame = () => {
 const init = () => {
   // build states
   state = { ...INIT_STATE }
+  // clear typing input field
+  typingInput.value = ''
   // load menu
   menuDialog.showModal()
 }

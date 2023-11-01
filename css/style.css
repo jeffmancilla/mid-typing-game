@@ -8,8 +8,8 @@
   --text-1: hwb(0 100% 40%);
   --text-2: hsl(40, 80%, 60%);
   --text-3: hsl(0, 75%, 25%);
-  --distance-1: 15rem;
-  --distance-2: 20rem;
+  --distance-1: 24rem;
+  --distance-2: 32rem;
 }
 ::backdrop {
   background: black;
@@ -132,8 +132,8 @@ select {
   gap: 4rem;
   padding: 2rem;
   border: 1px solid var(--surface-2);
-  height: var(--distance-2);
-  width: var(--distance-1);
+  height: var(--distance-1);
+  width: var(--distance-2);
 }
 
 
@@ -156,7 +156,7 @@ select {
     opacity: 1;
   }
   100% {
-    transform: translateY(var(--distance-2));
+    transform: translateY(var(--distance-1));
     opacity: 1;
   }
 }
