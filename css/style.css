@@ -1,33 +1,38 @@
 @import url('https://fonts.googleapis.com/css2?family=EB+Garamond&display=swap');
 
 :root {
-  --accent-1: hsl(290, 62%, 25%);
-  --accent-2: hsl(290, 62%, 33%);
   --surface-1: hsl(0, 0%, 10%);
   --surface-2: hsl(0, 0%, 20%);
   --text-1: hwb(0 100% 40%);
   --text-2: hsl(40, 80%, 60%);
   --text-3: hsl(0, 75%, 25%);
-  --distance-1: 24rem;
-  --distance-2: 32rem;
+  --distance-height: 24rem;
+  --distance-width-min: 32rem;
+  --distance-width-max: 16rem;
 }
 ::backdrop {
   background: black;
-  opacity: .9
+  opacity: 0.9;
 }
 
 html {
   color: var(--text-1);
   background-color: var(--surface-1);
-  font-family: 'EB Garamond', serif; 
+  font-family: 'EB Garamond', serif;
 }
 
+h2,
+label,
+select {
+  font-size: 1rem;
+  font-weight: 600;
+  text-transform: uppercase;
+}
+
+/* menu related */
+
 button,
-select,
-#main-menu,
-#rules-menu,
-#rip, 
-#win,
+dialog,
 #typing {
   border: none;
   background: none;
@@ -40,7 +45,7 @@ select,
   text-align: center;
   font-size: 1rem;
 }
-/* menu related */
+
 dialog * {
   display: block;
 }
@@ -51,9 +56,6 @@ button {
   padding: 1 2rem;
   margin: 0 auto;
 }
-
-
-
 
 h1 * {
   vertical-align: middle;
@@ -84,16 +86,78 @@ button:hover {
   background: radial-gradient(var(--surface-2), var(--surface-1), black, black);
 }
 
+select {
+  margin-bottom: 1rem;
+}
+
+#in-game {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  margin: 0 auto;
+}
+
+#lanes {
+  display: flex;
+  justify-content: space-evenly;
+  padding: 0 auto;
+  height: var(--distance-height);
+  min-width: var(--distance-width-max);
+  max-width: var(--distance-width-min);
+  border: 1px solid var(--surface-2);
+}
+
+#lanes > div {
+  display: flex;
+  justify-content: center;
+}
+
+#ui {
+  display: flex;
+  justify-content: space-between;
+  min-width: var(--distance-width-max);
+  max-width: var(--distance-width-min);
+  border: 1px solid var(--surface-2);
+}
+
 /* animations */
-dialog {
+
+#rip,
+#win,
+#main-menu,
+select {
   animation-name: fadeIn;
   animation-duration: 10s;
 }
 
-button,
+#options-menu,
 select {
   animation-name: fadeInMenu;
+  animation-duration: 1s;
+}
+
+button {
+  animation-name: fadeInMenu;
   animation-duration: 5s;
+}
+.word {
+  padding: 0.5rem;
+  position: absolute;
+  animation-name: fallDown;
+  animation-timing-function: linear;
+  opacity: 0;
+}
+
+/* animation keyframes */
+
+@keyframes fallDown {
+  5% {
+    opacity: 1;
+  }
+  100% {
+    transform: translateY(var(--distance-height));
+    opacity: 1;
+  }
 }
 
 @keyframes fadeIn {
@@ -108,55 +172,15 @@ select {
     opacity: 1;
   }
 }
+
 @keyframes fadeInMenu {
   0% {
     opacity: 0;
   }
-  50% {
+  75% {
     opacity: 0;
   }
-  75% {
-    opacity: 1;
-  }
-}
-
-#in-game {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  margin: 0 auto;
-}
-
-#lanes {
-  display: flex;
-  gap: 4rem;
-  padding: 2rem;
-  border: 1px solid var(--surface-2);
-  height: var(--distance-1);
-  width: var(--distance-2);
-}
-
-
-
-#lanes > div {
-}
-
-/* words */
-.word {
-  background-color: var(--accent-1);
-  padding: 0.5rem;
-  position: absolute;
-  animation-name: fallDown;
-  animation-timing-function: linear;
-  opacity: 0;
-}
-
-@keyframes fallDown {
-  5% {
-    opacity: 1;
-  }
   100% {
-    transform: translateY(var(--distance-1));
     opacity: 1;
   }
 }

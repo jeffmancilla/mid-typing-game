@@ -14,22 +14,30 @@
         <span>id typin</span>
         <span>g</span>
       </h1>
-      <select id="category"></select>
-      <select id="difficulty"></select>
-      <div id="main-menu-options">
-        <button id="play">play</button>
-        <button id="rules">rules</button>
-      </div>
+
+      <button id="play">play</button>
+      <button id="options">options</button>
     </dialog>
-    <dialog id="rules-menu">
+    <dialog id="options-menu">
       <blockquote cite="https://www.urbandictionary.com/define.php?term=mid">
         <p>
           <strong> mid: </strong>
           labeling [something] as average or poor quality.
         </p>
         <footer><cite>—Urban Dictionary</cite></footer>
-        <p>To win, you must type out all of words that appear before they fall to the bottom of the screen.</p>
       </blockquote>
+
+      <h2>Rules</h2>
+      <p>
+        To win, you must type out all of words that appear before they fall to
+        the bottom of the screen.
+      </p>
+      <p>Use the Space, Tab or Enter keys to attempt a word match.</p>
+
+      <label for="category">Word Category</label>
+      <select id="category"></select>
+      <label for="difficulty">Difficulty</label>
+      <select id="difficulty"></select>
 
       <button id="menu1">main menu</button>
     </dialog>
@@ -41,17 +49,12 @@
       <span>words slain</span>
       <button id="menu3">main menu</button>
     </dialog>
-    <dialog id="credits">
-      <audio id="rip-audio" src="assets/dark-souls-you-died.mp3">
-    </dialog>
     <div id="in-game">
       <section id="ui">
-        <!-- <select id="categories"></select>
-        <button type="submit" id="play" autofocus>Play</button> -->
+        <div id="difficulty"></div>
+        <div id="score"></div>
       </section>
       <section id="lanes">
-        <div></div>
-        <div></div>
         <div></div>
         <div></div>
         <div></div>
@@ -67,5 +70,10 @@
         <input id="typing" type="text" disabled />
       </section>
     </div>
+    <audio id="rip-audio" src="assets/dark-souls-you-died.mp3" autoplay />
+    <audio id="win-audio" src="assets/bossout.mp3" autoplay />
+    <audio class="typo" src="assets/bruh.mp3" autoplay />
+    <audio class="typo" src="assets/oof.mp3" autoplay />
+    <audio class="match" src="assets/hitmarker.mp3" autoplay />
   </body>
 </html>

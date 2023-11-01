@@ -1,5 +1,6 @@
-// /@ts-check
-// constants
+// lol not ready for vanillaJS typesafety @ts-check
+
+// CONSTANTS
 
 const WORD_BANK = {
   tutorial: ['the', 'quick', 'brown', 'fox', 'jumps', 'over', 'lazy', 'dog'],
@@ -195,36 +196,41 @@ const INIT_STATE = {
   weight: 15, // seconds
   difficulty: 1, //difficulty multiplier
   score: 0,
+  wordsLeft: 0,
 }
 
-// variables
+// VARIABLES
 
 let state
-let levelComplete
 let gameId
 
-// elements
+// ELEMENTS
 
 const bodyEl = document.querySelector('body')
 
 const menuDialog = document.querySelector('#main-menu')
-const rulesDialog = document.querySelector('#rules-menu')
+const optionsDialog = document.querySelector('#options-menu')
 const loseDialog = document.querySelector('#rip')
 const winDialog = document.querySelector('#win')
 
 const categorySelect = document.querySelector('#category')
 const difficultySelect = document.querySelector('#difficulty')
 const playButton = document.querySelector('#play')
-const rulesButton = document.querySelector('#rules')
-const rulesMenuButton = document.querySelector('#menu1')
+const optionsButton = document.querySelector('#options')
+const optionsMenuButton = document.querySelector('#menu1')
 const ripMenuButton = document.querySelector('#menu2')
 const winMenuButton = document.querySelector('#menu3')
 
-const lanesSection = document.querySelectorAll('#lanes > div')
 const typingInput = document.querySelector('#typing')
 
+const scoreDiv = document.querySelector('#score')
+const difficultyDiv = document.querySelector('#difficulty')
+const laneDivs = document.querySelectorAll('#lanes > div')
+
 const ripAudio = document.querySelector('#rip-audio')
-console.dir(ripAudio)
+const winAudio = document.querySelector('#win-audio')
+const matchAudio = document.querySelectorAll('.match')
+const typoAudio = document.querySelectorAll('.typo')
 
 // UTILITY FUNCTIONS
 
@@ -250,11 +256,7 @@ const getRandomNumber = (n) => {
 }
 
 const clearTimers = () => {
-  console.log(`clearing interval ${gameId}`)
   clearInterval(gameId)
-  console.log(`clearing timeout ${levelComplete}`)
-  clearTimeout(levelComplete)
-  console.dir(state.timeouts)
   state.timeouts.forEach((timeout) => clearTimeout(timeout))
 }
 
@@ -266,13 +268,13 @@ playButton.addEventListener('click', () => {
   typingInput.removeAttribute('disabled')
   loadGame()
 })
-rulesButton.addEventListener('click', () => {
+optionsButton.addEventListener('click', () => {
   menuDialog.close()
-  rulesDialog.showModal()
+  optionsDialog.showModal()
 })
-rulesMenuButton.addEventListener('click', () => {
-  rulesDialog.close()
-  menuDialog.showModal()
+optionsMenuButton.addEventListener('click', () => {
+  optionsDialog.close()
+  init()
 })
 ripMenuButton.addEventListener('click', () => {
   loseDialog.close()
@@ -315,12 +317,15 @@ bodyEl.addEventListener('keydown', (e) => {
   }
   // typed word match condition
   else if (e.key === ' ' || e.key === 'Enter' || e.key === 'Tab') {
+    let match
     const wordEl = document.querySelectorAll('#lanes > div > div')
     wordEl.forEach((word) => {
       if (word.innerText === typingInput.value) {
         destroyWord(word)
+        match = true
       }
     })
+    if (!match) typoAudio[getRandomNumber(typoAudio.length)].play()
     typingInput.value = null
   }
   // add key to text input element
@@ -357,11 +362,12 @@ const spawnWord = () => {
   newWordDiv.classList.add('word')
   newWordDiv.setAttribute('id', `${state.timeouts.length}`)
   newWordDiv.style.animationDuration = `${weightSeconds}s`
+  newWordDiv.style.backgroundColor = `hsl(${getRandomNumber(360)}, 60%, 15%)`
   // drop word into a lane
-  const randomIndex = getRandomNumber(lanesSection.length)
-  lanesSection[randomIndex].appendChild(newWordDiv)
+  const randomIndex = getRandomNumber(laneDivs.length)
+  laneDivs[randomIndex].appendChild(newWordDiv)
   // create a gameover timeout that triggers at the same time as the word completes it's drop animation
-  // state.timeouts.push(setTimeout(loseGame, weightMilliseconds))
+  state.timeouts.push(setTimeout(loseGame, weightMilliseconds))
 }
 
 /**
@@ -369,9 +375,15 @@ const spawnWord = () => {
  * @param {HTMLDivElement} el
  */
 const destroyWord = (el) => {
-  clearInterval(state.timeouts[el.id])
+  clearTimeout(state.timeouts[el.id])
+  matchAudio[getRandomNumber(matchAudio.length)].play()
   // calculate score
+  state.score += el.innerText.length * 100 * state.difficulty
+  scoreDiv.innerText = state.score
+
+  //remove word element, decrement wordsLeft counter
   el.remove()
+  state.wordsLeft--
 }
 
 // overarching game thangs (need to label this properly)
@@ -390,18 +402,18 @@ const runGame = () => {
   if (state.words.length > 0) {
     spawnWord()
   }
-  if (state.words.length === 0) {
-    console.log(`win timer set`)
-    levelComplete = setTimeout(winGame, state.weight * 1000 + 1000)
-    clearInterval(gameId)
+  if (state.wordsLeft === 0) {
+    winGame()
   }
 }
 const loseGame = () => {
   clearTimers()
+  ripAudio.play()
   loseDialog.showModal()
 }
 const winGame = () => {
   clearTimers()
+  winAudio.play()
   winDialog.showModal()
 }
 
@@ -411,10 +423,16 @@ const loadGame = () => {
     () => 0.5 - Math.random()
   )
 
-  // get difficulty, set weights, delays
+  // get difficulty, set states
   state.difficulty = DIFFICULTY[difficultySelect.selectedOptions[0].innerText]
   state.weight /= state.difficulty
   state.delay /= state.difficulty
+  state.wordsLeft = state.words.length
+
+  // update ui elements
+  // difficultyDiv.innerText = DIFFICULTY[difficultySelect.selectedOptions[0].innerText]
+  console.log(scoreDiv.innerText)
+  scoreDiv.innerText = state.score
 
   //start game
   gameId = setInterval(runGame, state.delay)
@@ -425,11 +443,14 @@ const init = () => {
   state = { ...INIT_STATE }
   // clear typing input field
   typingInput.value = ''
+  playButton.innerText = difficultySelect.selectedOptions[0].innerText
   // load menu
   menuDialog.showModal()
 }
 
-// load assets
+// build elements (lol should this be inside of my init? i dont want these rebuilt everytime the player goes back to main menu)
 buildCategories()
 buildDifficulties()
+
+//initialize game
 init()
