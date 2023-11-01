@@ -5,22 +5,41 @@
   --accent-2: hsl(290, 62%, 33%);
   --surface-1: hsl(0, 0%, 10%);
   --surface-2: hsl(0, 0%, 20%);
-  --text-1: hsl(0, 0%, 90%);
+  --text-1: hwb(0 90% 10%);
   --text-2: hsl(40, 80%, 60%);
-  --text-3: hsl(0, 0%, 50%);
+  --text-3: hsl(0, 75%, 25%);
   --distance-1: 15rem;
   --distance-2: 20rem;
 }
 ::backdrop {
   background: black;
+  opacity: .9
 }
 
 html {
   color: var(--text-1);
   background-color: var(--surface-1);
+  font-family: 'EB Garamond', serif; 
+}
+
+button,
+select,
+#main-menu,
+#rules-menu,
+#rip, 
+#win,
+#typing {
+  border: none;
+  background: none;
+  color: var(--text-1);
+  font-weight: 500;
   font-family: 'EB Garamond', serif;
 }
 
+#typing {
+  text-align: center;
+  font-size: 1rem;
+}
 /* menu related */
 dialog * {
   display: block;
@@ -32,19 +51,7 @@ select {
   padding: 1 2rem;
 }
 
-button,
-select,
-#main-menu,
-#rules-menu,
-#rip, 
-#win {
-  border: none;
-  background: none;
-  font-family: 'EB Garamond', serif;
-  margin: auto;
-  color: var(--text-3);
-  font-weight: 500;
-}
+
 
 
 h1 * {
@@ -83,9 +90,10 @@ dialog {
 }
 
 #rip > span,
+#win > span,
 .title {
   animation-name: fadeIn;
-  animation-duration: 3s;
+  animation-duration: 5s;
 }
 
 @keyframes fadeIn {
@@ -93,10 +101,21 @@ dialog {
     transform: scale(95%, 95%);
     opacity: 0;
   }
-  20% {
+  10% {
+    opacity: 0;
+  }
+  50% {
+    opacity: 1;
+  }
+}
+@keyframes fadeInMenu {
+  0% {
     opacity: 0;
   }
   40% {
+    opacity: 0;
+  }
+  80% {
     opacity: 1;
   }
 }
@@ -111,17 +130,14 @@ dialog {
   display: flex;
   gap: 4rem;
   padding: 2rem;
-}
-
-#typing {
-  text-align: center;
-  font-size: 1rem;
-  background-color: var(--surface-2);
-}
-
-#lanes > div {
+  border: 1px solid var(--surface-2);
   height: var(--distance-2);
   width: var(--distance-1);
+}
+
+
+
+#lanes > div {
 }
 
 /* words */
