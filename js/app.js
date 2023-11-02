@@ -190,8 +190,7 @@ const DIFFICULTY = {
 const INIT_STATE = {
   words: [],
   timeouts: [], // for stashing timeoutIds
-  delay: 1500, // milliseconds
-  drag: 15, // seconds
+  delay: 2500, // milliseconds
   difficulty: 1, //difficulty multiplier
   score: 0,
   wordsLeft: 0,
@@ -220,6 +219,7 @@ const difficultySelect = document.querySelector('#difficulty')
 const optionsMenuButton = document.querySelector('#menu-options')
 const ripMenuButton = document.querySelector('#menu-rip')
 const winMenuButton = document.querySelector('#menu-win')
+const quitButton = document.querySelector('#menu-quit')
 
 const randomizeSvg = document.querySelector('#randomize')
 
@@ -262,7 +262,8 @@ const getRandomNumber = (n) => {
 // LISTENERS
 
 bodyEl.addEventListener('mouseup', (e) => {
-  if (e.target.id === randomizeSvg.id || e.target.ownerSVGElement) { // svg path got in the way of clicking the dice
+  if (e.target.id === randomizeSvg.id || e.target.ownerSVGElement) {
+    // svg path got in the way of clicking the dice
     randomizeSvg.style.opacity = 0.5
     playButton.style.opacity = 1
   }
@@ -281,6 +282,8 @@ bodyEl.addEventListener('mousedown', (e) => {
     )
     setPlayInnerText()
   }
+
+  // buttons
   if (e.target.id === playButton.id) {
     playAudio.play()
     menuDialog.close()
@@ -304,6 +307,9 @@ bodyEl.addEventListener('mousedown', (e) => {
     winDialog.close()
     init()
   }
+  if (e.target.id === quitButton.id) {
+    loseGame() 
+  }
 })
 
 // capture keydown events
@@ -313,16 +319,37 @@ bodyEl.addEventListener('keydown', (e) => {
     return
   }
   e.preventDefault()
-  // ignore these keys
+  console.log(e.key)
+  // add key to text input element
   if (
-    e.key === 'CapsLock' ||
-    e.key === 'Control' ||
-    e.key === 'Alt' ||
-    e.key === 'Shift' ||
-    e.key === 'Escape' ||
-    e.key === 'Delete'
+    e.key.toLowerCase() === 'q' ||
+    e.key.toLowerCase() === 'w' ||
+    e.key.toLowerCase() === 'e' ||
+    e.key.toLowerCase() === 'r' ||
+    e.key.toLowerCase() === 't' ||
+    e.key.toLowerCase() === 'y' ||
+    e.key.toLowerCase() === 'u' ||
+    e.key.toLowerCase() === 'i' ||
+    e.key.toLowerCase() === 'o' ||
+    e.key.toLowerCase() === 'p' ||
+    e.key.toLowerCase() === 'a' ||
+    e.key.toLowerCase() === 's' ||
+    e.key.toLowerCase() === 'd' ||
+    e.key.toLowerCase() === 'f' ||
+    e.key.toLowerCase() === 'g' ||
+    e.key.toLowerCase() === 'h' ||
+    e.key.toLowerCase() === 'j' ||
+    e.key.toLowerCase() === 'k' ||
+    e.key.toLowerCase() === 'l' ||
+    e.key.toLowerCase() === 'z' ||
+    e.key.toLowerCase() === 'x' ||
+    e.key.toLowerCase() === 'c' ||
+    e.key.toLowerCase() === 'v' ||
+    e.key.toLowerCase() === 'b' ||
+    e.key.toLowerCase() === 'n' ||
+    e.key.toLowerCase() === 'm'
   ) {
-    return
+    typingInput.value += e.key
   }
   // reallow user to backspace out of typed keys
   else if (e.key === 'Backspace') {
@@ -342,23 +369,19 @@ bodyEl.addEventListener('keydown', (e) => {
     if (!match) typoAudio[getRandomNumber(typoAudio.length)].play()
     typingInput.value = null
   }
-  // add key to text input element
-  else {
-    typingInput.value += e.key
-  }
 })
 
 // GAME FUNCTIONS
 
 const spawnWord = () => {
-  const dragSeconds = state.drag
-  const dragMilliseconds = state.drag * 1000
+  const dragSeconds = state.delay / 250 / (Math.random() * (state.difficulty / 2)) //random spice factor, sorry not sorry
+  const dragMilliseconds = dragSeconds * 1000
 
   // pop a word out of the words array and generate a new word element with it
   const newWordDiv = document.createElement('div')
   newWordDiv.innerText = state.words.pop()
   newWordDiv.classList.add('word')
-  newWordDiv.setAttribute('id', `${state.timeouts.length}`)
+  newWordDiv.setAttribute('id', state.timeouts.length)
   newWordDiv.style.animationDuration = `${dragSeconds}s`
   newWordDiv.style.backgroundColor = `hsl(${getRandomNumber(360)}, 60%, 15%)`
 
@@ -437,12 +460,11 @@ const loadGame = () => {
   // get selected category, randomize words
   state.words = WORD_BANK[categorySelect.selectedOptions[0].innerText].toSorted(
     () => 0.5 - Math.random()
-  )
+  ) // still need to wrap my head around this .sort(() => 0.5 - Math.random()) shenanigans
   state.wordsLeft = state.words.length
 
   // get difficulty, set states
   state.difficulty = DIFFICULTY[difficultySelect.selectedOptions[0].innerText]
-  state.drag /= state.difficulty
   state.delay /= state.difficulty
 
   // update ui elements
@@ -458,18 +480,16 @@ const loadGame = () => {
 const init = () => {
   // build states
   state = { ...INIT_STATE }
-  // state.timeouts = []
-  // state.words = []
-  // clear typing input field
+  // replace play button text with category + difficulty
   setPlayInnerText()
   // load menu
   menuDialog.showModal()
 }
-// build elements (lol should this be inside of my init? i dont want these rebuilt everytime the player goes back to main menu)
-buildCategories()
-// set random category before init
-categorySelect.options.selectedIndex = getRandomNumber(categorySelect.length)
-buildDifficulties()
 
-//initialize game
+// pre-init stuff - is there even such a thing as pre-init? revisit this later
+buildCategories()
+buildDifficulties()
+categorySelect.options.selectedIndex = getRandomNumber(categorySelect.length) // randomly set a category before init for spice factor
+
+// initialize game
 init()
