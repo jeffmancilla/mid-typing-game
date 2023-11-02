@@ -151,9 +151,9 @@ select * {
 
 /* animations */
 
-#rip,
-#win,
-#main-menu {
+#rip > h2,
+#win > h2,
+#main-menu > h1 {
   animation-name: fadeInScale;
   animation-duration: 10s;
 }
@@ -166,7 +166,7 @@ select {
 
 button,
 #randomize,
-.score {
+dialog > span {
   animation-name: fadeIn;
   animation-duration: 3s;
 }
@@ -180,10 +180,6 @@ button,
   box-shadow: 0.1rem 0.1rem black;
 }
 
-#in-game {
-  animation-name: fadeIn;
-  animation-delay: 2s
-}
 
 /* animation keyframes */
 
@@ -204,7 +200,7 @@ button,
   0% {
     opacity: 0;
   }
-  80% {
+  75% {
     opacity: 0;
   }
   100% {
@@ -218,18 +214,6 @@ button,
     opacity: 0;
   }
   100% {
-    opacity: 1;
-  }
-}
-
-@keyframes fadeOut {
-  0% {
-    opacity: 0;
-  }
-  10% {
-    opacity: 0;
-  }
-  25% {
     opacity: 1;
   }
 }

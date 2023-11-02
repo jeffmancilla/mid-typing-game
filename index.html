@@ -40,29 +40,29 @@
         <footer><cite>—Urban Dictionary</cite></footer>
       </blockquote>
 
-      <h2>Rules</h2>
+      <h2>how to play</h2>
       <p>
-        Clear out words that appear by typing them out before
-        they fall to the bottom of the screen.
+        Clear out words that appear by typing them out before they fall to the
+        bottom of the screen.
       </p>
       <p>Use your Space, Tab or Enter keys to attempt a word clear.</p>
 
-      <label for="category">Word Category</label>
+      <label for="category">word Category</label>
       <select id="category"></select>
-      <label for="difficulty">Difficulty</label>
+      <label for="difficulty">difficulty</label>
       <select id="difficulty"></select>
 
       <button id="menu-options">main menu</button>
     </dialog>
     <dialog id="rip">
       <h2>you died</h2>
-      <span>total score</span>
+      <span>score</span>
       <span class="score"></span>
       <button id="menu-rip">main menu</button>
     </dialog>
     <dialog id="win">
       <h2>words slain</h2>
-      <span>total score</span>
+      <span>score</span>
       <span class="score"></span>
       <button id="menu-win">main menu</button>
     </dialog>
@@ -87,8 +87,9 @@
         <input id="typing" type="text" disabled />
       </section>
     </div>
-    <audio id="rip-audio" src="assets/you-died-sound-effect.mp3" autoplay />
-    <audio id="win-audio" src="assets/enemy-felled.mp3" autoplay />
+    <audio id="rip-audio" src="assets/rip.mp3" autoplay />
+    <audio id="win-audio" src="assets/win.mp3" autoplay />
+    <audio id="play-audio" src="assets/start.mp3" autoplay />
     <audio class="typo" src="assets/bruh.mp3" autoplay />
     <audio class="typo" src="assets/oof.mp3" autoplay />
     <audio class="match" src="assets/hitmarker.mp3" autoplay />

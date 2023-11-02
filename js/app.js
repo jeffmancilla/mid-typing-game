@@ -232,6 +232,7 @@ const laneDivs = document.querySelectorAll('#lanes > div')
 
 const ripAudio = document.querySelector('#rip-audio')
 const winAudio = document.querySelector('#win-audio')
+const playAudio = document.querySelector('#play-audio')
 const matchAudio = document.querySelectorAll('.match')
 const typoAudio = document.querySelectorAll('.typo')
 
@@ -261,14 +262,17 @@ const getRandomNumber = (n) => {
 // LISTENERS
 
 bodyEl.addEventListener('mouseup', (e) => {
-  if (e.target.id === randomizeSvg.id) {
+  if (e.target.id === randomizeSvg.id || e.target.ownerSVGElement) { // svg path got in the way of clicking the dice
     randomizeSvg.style.opacity = 0.5
+    playButton.style.opacity = 1
   }
 })
 
 bodyEl.addEventListener('mousedown', (e) => {
-  if (e.target.id === randomizeSvg.id) {
+  //set random difficulty and category
+  if (e.target.id === randomizeSvg.id || e.target.ownerSVGElement) {
     randomizeSvg.style.opacity = 1
+    playButton.style.opacity = 0.5
     difficultySelect.options.selectedIndex = getRandomNumber(
       difficultySelect.length
     )
@@ -278,7 +282,10 @@ bodyEl.addEventListener('mousedown', (e) => {
     setPlayInnerText()
   }
   if (e.target.id === playButton.id) {
+    playAudio.play()
     menuDialog.close()
+    bodyEl.style.animationName = 'fadeIn'
+    bodyEl.style.animationDuration = '1.5s'
     loadGame()
   }
   if (e.target.id === optionsButton.id) {
@@ -457,10 +464,11 @@ const init = () => {
   setPlayInnerText()
   // load menu
   menuDialog.showModal()
-  console.dir(scoreEls)
 }
 // build elements (lol should this be inside of my init? i dont want these rebuilt everytime the player goes back to main menu)
 buildCategories()
+// set random category before init
+categorySelect.options.selectedIndex = getRandomNumber(categorySelect.length)
 buildDifficulties()
 
 //initialize game
