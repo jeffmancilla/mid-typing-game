@@ -180,6 +180,11 @@ button,
   box-shadow: 0.1rem 0.1rem black;
 }
 
+#in-game {
+  animation-name: fadeIn;
+  animation-delay: 2s
+}
+
 /* animation keyframes */
 
 @keyframes fallDown {
@@ -191,7 +196,7 @@ button,
   }
   100% {
     transform: translateY(var(--distance-height));
-    opacity: 0;
+    opacity: 0.5;
   }
 }
 

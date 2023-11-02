@@ -3,7 +3,6 @@
 // CONSTANTS
 
 const WORD_BANK = {
-  tutorial: ['the', 'quick', 'brown', 'fox', 'jumps', 'over', 'lazy', 'dog'],
   'common words': [
     'the',
     'be',
