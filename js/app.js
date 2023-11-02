@@ -186,23 +186,22 @@ const DIFFICULTY = {
   'new game': 1,
   'new game+': 2,
   'new game++': 3,
-  'new game+7': 7,
 }
 
 const INIT_STATE = {
   words: [],
   timeouts: [], // for stashing timeoutIds
-  delay: 3000, // milliseconds
-  weight: 15, // seconds
+  delay: 1500, // milliseconds
+  drag: 15, // seconds
   difficulty: 1, //difficulty multiplier
   score: 0,
   wordsLeft: 0,
+  gameId: 0,
 }
 
 // VARIABLES
 
 let state
-let gameId
 
 // ELEMENTS
 
@@ -213,18 +212,23 @@ const optionsDialog = document.querySelector('#options-menu')
 const loseDialog = document.querySelector('#rip')
 const winDialog = document.querySelector('#win')
 
-const categorySelect = document.querySelector('#category')
-const difficultySelect = document.querySelector('#difficulty')
 const playButton = document.querySelector('#play')
 const optionsButton = document.querySelector('#options')
-const optionsMenuButton = document.querySelector('#menu1')
-const ripMenuButton = document.querySelector('#menu2')
-const winMenuButton = document.querySelector('#menu3')
+
+const categorySelect = document.querySelector('#category')
+const difficultySelect = document.querySelector('#difficulty')
+
+const optionsMenuButton = document.querySelector('#menu-options')
+const ripMenuButton = document.querySelector('#menu-rip')
+const winMenuButton = document.querySelector('#menu-win')
+
+const randomizeSvg = document.querySelector('#randomize')
 
 const typingInput = document.querySelector('#typing')
 
-const scoreDiv = document.querySelector('#score')
-const difficultyDiv = document.querySelector('#difficulty')
+const scoreEls = document.querySelectorAll('.score')
+const levelDiv = document.querySelector('#level')
+
 const laneDivs = document.querySelectorAll('#lanes > div')
 
 const ripAudio = document.querySelector('#rip-audio')
@@ -255,40 +259,44 @@ const getRandomNumber = (n) => {
   return Math.floor(Math.random() * n)
 }
 
-const clearTimers = () => {
-  clearInterval(gameId)
-  state.timeouts.forEach((timeout) => clearTimeout(timeout))
-}
-
 // LISTENERS
 
-// buttons
-playButton.addEventListener('click', () => {
-  menuDialog.close()
-  typingInput.removeAttribute('disabled')
-  loadGame()
-})
-optionsButton.addEventListener('click', () => {
-  menuDialog.close()
-  optionsDialog.showModal()
-})
-optionsMenuButton.addEventListener('click', () => {
-  optionsDialog.close()
-  init()
-})
-ripMenuButton.addEventListener('click', () => {
-  loseDialog.close()
-  init()
-})
-winMenuButton.addEventListener('click', () => {
-  winDialog.close()
-  init()
+bodyEl.addEventListener('mouseup', (e) => {
+  if (e.target.id === randomizeSvg.id) {
+    randomizeSvg.style.opacity = 0.5
+  }
 })
 
-// needed a way to remove using the escape key to close a <dialog>
-bodyEl.addEventListener('keydown', (e) => {
-  if (e.key === 'Escape') {
-    e.preventDefault()
+bodyEl.addEventListener('mousedown', (e) => {
+  if (e.target.id === randomizeSvg.id) {
+    randomizeSvg.style.opacity = 1
+    difficultySelect.options.selectedIndex = getRandomNumber(
+      difficultySelect.length
+    )
+    categorySelect.options.selectedIndex = getRandomNumber(
+      categorySelect.length
+    )
+    setPlayInnerText()
+  }
+  if (e.target.id === playButton.id) {
+    menuDialog.close()
+    loadGame()
+  }
+  if (e.target.id === optionsButton.id) {
+    menuDialog.close()
+    optionsDialog.showModal()
+  }
+  if (e.target.id === optionsMenuButton.id) {
+    optionsDialog.close()
+    init()
+  }
+  if (e.target.id === ripMenuButton.id) {
+    loseDialog.close()
+    init()
+  }
+  if (e.target.id === winMenuButton.id) {
+    winDialog.close()
+    init()
   }
 })
 
@@ -334,40 +342,26 @@ bodyEl.addEventListener('keydown', (e) => {
   }
 })
 
-// old way to track player inputs
-// typingInput.addEventListener('keydown', (e) => {
-//   if (e.key === ' ' || e.key === 'Enter' || e.key === 'Tab') {
-//     e.preventDefault()
+// GAME FUNCTIONS
 
-//     const wordEl = document.querySelectorAll('#lanes > div > div')
-//     wordEl.forEach((word) => {
-//       if (word.innerText === e.target.value) {
-//         destroyWord(word)
-//         return
-//       }
-//     })
-//     e.target.value = null
-//   }
-// })
-
-// OTHER FUNCTIONS
-
-// in game stuff
 const spawnWord = () => {
-  const weightSeconds = state.weight
-  const weightMilliseconds = state.weight * 1000
+  const dragSeconds = state.drag
+  const dragMilliseconds = state.drag * 1000
+
   // pop a word out of the words array and generate a new word element with it
   const newWordDiv = document.createElement('div')
   newWordDiv.innerText = state.words.pop()
   newWordDiv.classList.add('word')
   newWordDiv.setAttribute('id', `${state.timeouts.length}`)
-  newWordDiv.style.animationDuration = `${weightSeconds}s`
+  newWordDiv.style.animationDuration = `${dragSeconds}s`
   newWordDiv.style.backgroundColor = `hsl(${getRandomNumber(360)}, 60%, 15%)`
+
   // drop word into a lane
   const randomIndex = getRandomNumber(laneDivs.length)
   laneDivs[randomIndex].appendChild(newWordDiv)
-  // create a gameover timeout that triggers at the same time as the word completes it's drop animation
-  state.timeouts.push(setTimeout(loseGame, weightMilliseconds))
+
+  // create a gameover timeout that triggers at the same time the word completes its drop animation
+  state.timeouts.push(setTimeout(loseGame, dragMilliseconds))
 }
 
 /**
@@ -375,15 +369,17 @@ const spawnWord = () => {
  * @param {HTMLDivElement} el
  */
 const destroyWord = (el) => {
-  clearTimeout(state.timeouts[el.id])
-  matchAudio[getRandomNumber(matchAudio.length)].play()
-  // calculate score
-  state.score += el.innerText.length * 100 * state.difficulty
-  scoreDiv.innerText = state.score
-
-  //remove word element, decrement wordsLeft counter
+  if (state.gameId) {
+    matchAudio[getRandomNumber(matchAudio.length)].play()
+    clearTimeout(state.timeouts[el.id])
+    // calculate score
+    state.score += el.innerText.length * 100 * state.difficulty
+    scoreEls.forEach((el) => (el.innerText = state.score))
+    // decrement wordsLeft counter
+    state.wordsLeft--
+  }
+  //remove word element,
   el.remove()
-  state.wordsLeft--
 }
 
 // overarching game thangs (need to label this properly)
@@ -397,6 +393,31 @@ const buildDifficulties = () => {
     appendNewElement('option', difficultySelect, key)
   }
 }
+const setPlayInnerText = () =>
+  (playButton.innerText = `${difficultySelect.selectedOptions[0].innerText} (${categorySelect.selectedOptions[0].innerText})`)
+
+const clearGame = () => {
+  clearInterval(state.gameId)
+  state.gameId = 0
+  const wordDivs = document.querySelectorAll('.word')
+  wordDivs.forEach((word) => destroyWord(word))
+  typingInput.value = ''
+  state.timeouts.forEach((timeout) => clearTimeout(timeout))
+  // clear word elements
+  INIT_STATE.timeouts = []
+  INIT_STATE.words = []
+}
+
+const loseGame = () => {
+  ripAudio.play()
+  loseDialog.showModal()
+  clearGame()
+}
+const winGame = () => {
+  winAudio.play()
+  winDialog.showModal()
+  clearGame()
+}
 
 const runGame = () => {
   if (state.words.length > 0) {
@@ -406,48 +427,39 @@ const runGame = () => {
     winGame()
   }
 }
-const loseGame = () => {
-  clearTimers()
-  ripAudio.play()
-  loseDialog.showModal()
-}
-const winGame = () => {
-  clearTimers()
-  winAudio.play()
-  winDialog.showModal()
-}
-
 const loadGame = () => {
   // get selected category, randomize words
   state.words = WORD_BANK[categorySelect.selectedOptions[0].innerText].toSorted(
     () => 0.5 - Math.random()
   )
+  state.wordsLeft = state.words.length
 
   // get difficulty, set states
   state.difficulty = DIFFICULTY[difficultySelect.selectedOptions[0].innerText]
-  state.weight /= state.difficulty
+  state.drag /= state.difficulty
   state.delay /= state.difficulty
-  state.wordsLeft = state.words.length
 
   // update ui elements
-  // difficultyDiv.innerText = DIFFICULTY[difficultySelect.selectedOptions[0].innerText]
-  console.log(scoreDiv.innerText)
-  scoreDiv.innerText = state.score
-
+  levelDiv.innerText = categorySelect.selectedOptions[0].innerText
+  scoreEls.forEach((el) => {
+    console.dir(el)
+    el.innerText = state.score
+  })
   //start game
-  gameId = setInterval(runGame, state.delay)
+  state.gameId = setInterval(runGame, state.delay)
 }
 
 const init = () => {
   // build states
   state = { ...INIT_STATE }
+  // state.timeouts = []
+  // state.words = []
   // clear typing input field
-  typingInput.value = ''
-  playButton.innerText = difficultySelect.selectedOptions[0].innerText
+  setPlayInnerText()
   // load menu
   menuDialog.showModal()
+  console.dir(scoreEls)
 }
-
 // build elements (lol should this be inside of my init? i dont want these rebuilt everytime the player goes back to main menu)
 buildCategories()
 buildDifficulties()

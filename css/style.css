@@ -3,17 +3,17 @@
 :root {
   --surface-1: hsl(0, 0%, 10%);
   --surface-2: hsl(0, 0%, 20%);
-  --text-1: hwb(0 100% 40%);
+  --text-1: hsl(0, 0%, 75%);
   --text-2: hsl(40, 80%, 60%);
   --text-3: hsl(0, 75%, 25%);
-  --distance-height: 24rem;
-  --distance-width-min: 32rem;
-  --distance-width-max: 16rem;
+  --distance-height: 60vh;
+  --distance-width: 80vw;
 }
 ::backdrop {
   background: black;
-  opacity: 0.9;
+  opacity: 1;
 }
+
 
 html {
   color: var(--text-1);
@@ -23,7 +23,8 @@ html {
 
 h2,
 label,
-select {
+select,
+#ui > div {
   font-size: 1rem;
   font-weight: 600;
   text-transform: uppercase;
@@ -32,8 +33,7 @@ select {
 /* menu related */
 
 button,
-dialog,
-#typing {
+dialog {
   border: none;
   background: none;
   color: var(--text-1);
@@ -42,8 +42,14 @@ dialog,
 }
 
 #typing {
-  text-align: center;
+  margin-top: 2rem;
+  background-color: var(--surface-2);
+  color: var(--text-1);
+  font-family: 'EB Garamond', serif;
   font-size: 1rem;
+  text-align: center;
+  width: var(--distance-width);
+  max-width: 40rem;
 }
 
 dialog * {
@@ -71,23 +77,44 @@ h1 > span:last-child {
   font-size: 3rem;
 }
 
-#rip > span {
+#rip > h2 {
   color: darkred;
   text-transform: uppercase;
   font-size: 3rem;
 }
-#win > span {
+#win > h2 {
   color: var(--text-2);
   text-transform: uppercase;
   font-size: 3rem;
 }
 
+#rip, #win {
+  text-align: center;
+}
+
+.score {
+  margin-bottom: 4rem;
+}
 button:hover {
   background: radial-gradient(var(--surface-2), var(--surface-1), black, black);
 }
 
-select {
+p {
+  margin-top: 0;
   margin-bottom: 1rem;
+}
+
+select {
+  margin: 1rem;
+  color: var(--text-1);
+  background: none;
+  border: none;
+  font-family: 'EB Garamond', serif;
+
+}
+select * {
+  background: var(--surface-1);
+  font-family: 'EB Garamond', serif;
 }
 
 #in-game {
@@ -100,45 +127,48 @@ select {
 #lanes {
   display: flex;
   justify-content: space-evenly;
-  padding: 0 auto;
   height: var(--distance-height);
-  min-width: var(--distance-width-max);
-  max-width: var(--distance-width-min);
-  border: 1px solid var(--surface-2);
+  width: var(--distance-width);
+  max-width: 40rem;
 }
 
 #lanes > div {
   display: flex;
   justify-content: center;
+  /* border: 1px solid black */
 }
 
 #ui {
   display: flex;
   justify-content: space-between;
-  min-width: var(--distance-width-max);
-  max-width: var(--distance-width-min);
-  border: 1px solid var(--surface-2);
+  width: var(--distance-width);
+  max-width: 40rem;
+}
+
+#randomize {
+  opacity: 0.5;
 }
 
 /* animations */
 
 #rip,
 #win,
-#main-menu,
-select {
-  animation-name: fadeIn;
+#main-menu {
+  animation-name: fadeInScale;
   animation-duration: 10s;
 }
 
 #options-menu,
 select {
-  animation-name: fadeInMenu;
+  animation-name: fadeIn;
   animation-duration: 1s;
 }
 
-button {
-  animation-name: fadeInMenu;
-  animation-duration: 5s;
+button,
+#randomize,
+.score {
+  animation-name: fadeIn;
+  animation-duration: 3s;
 }
 .word {
   padding: 0.5rem;
@@ -146,6 +176,8 @@ button {
   animation-name: fallDown;
   animation-timing-function: linear;
   opacity: 0;
+  border-radius: 0.5rem;
+  box-shadow: 0.1rem 0.1rem black;
 }
 
 /* animation keyframes */
@@ -154,33 +186,45 @@ button {
   5% {
     opacity: 1;
   }
+  95% {
+    opacity: 1;
+  }
   100% {
     transform: translateY(var(--distance-height));
-    opacity: 1;
+    opacity: 0;
   }
 }
 
 @keyframes fadeIn {
   0% {
+    opacity: 0;
+  }
+  80% {
+    opacity: 0;
+  }
+  100% {
+    opacity: 1;
+  }
+}
+
+@keyframes fadeInScale {
+  0% {
     transform: scale(95%, 95%);
+    opacity: 0;
+  }
+  100% {
+    opacity: 1;
+  }
+}
+
+@keyframes fadeOut {
+  0% {
     opacity: 0;
   }
   10% {
     opacity: 0;
   }
   25% {
-    opacity: 1;
-  }
-}
-
-@keyframes fadeInMenu {
-  0% {
-    opacity: 0;
-  }
-  75% {
-    opacity: 0;
-  }
-  100% {
     opacity: 1;
   }
 }
