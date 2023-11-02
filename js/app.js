@@ -190,7 +190,7 @@ const DIFFICULTY = {
 const INIT_STATE = {
   words: [],
   timeouts: [], // for stashing timeoutIds
-  delay: 2500, // milliseconds
+  delay: 2000, // milliseconds
   difficulty: 1, //difficulty multiplier
   score: 0,
   wordsLeft: 0,
@@ -308,7 +308,7 @@ bodyEl.addEventListener('mousedown', (e) => {
     init()
   }
   if (e.target.id === quitButton.id) {
-    loseGame() 
+    loseGame()
   }
 })
 
@@ -374,7 +374,8 @@ bodyEl.addEventListener('keydown', (e) => {
 // GAME FUNCTIONS
 
 const spawnWord = () => {
-  const dragSeconds = state.delay / 250 / (Math.random() * (state.difficulty / 2)) //random spice factor, sorry not sorry
+  const dragSeconds =
+    state.delay / 200 * (1 + (Math.random() / 2) + (state.difficulty / 10)) //random spice factor, sorry not sorry
   const dragMilliseconds = dragSeconds * 1000
 
   // pop a word out of the words array and generate a new word element with it

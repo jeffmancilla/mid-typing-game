@@ -63,6 +63,8 @@ button {
   margin: 0 auto;
 }
 
+
+
 h1 * {
   vertical-align: middle;
   color: var(--text-2);
@@ -97,6 +99,10 @@ h1 > span:last-child {
 }
 button:hover {
   background: radial-gradient(var(--surface-2), var(--surface-1), black, black);
+}
+#menu-quit:hover {
+  background: none;
+  opacity: .5;
 }
 
 p {
