@@ -1,4 +1,4 @@
-// lol not ready for vanillaJS typesafety @ts-check
+// type safety? nope! @ts-check
 
 // CONSTANTS
 
@@ -372,25 +372,42 @@ bodyEl.addEventListener('keydown', (e) => {
 
 // GAME FUNCTIONS
 
-const spawnWord = () => {
-  const dragSeconds =
-    (state.delay / 200) * (1 + Math.random() / 2 + state.difficulty / 10) //random spice factor, sorry not sorry
-  const dragMilliseconds = dragSeconds * 1000
+const buildCategories = () => {
+  for (const key in WORD_BANK) {
+    appendNewElement('option', categorySelect, key)
+  }
+}
+const buildDifficulties = () => {
+  for (const key in DIFFICULTY) {
+    appendNewElement('option', difficultySelect, key)
+  }
+}
+const setPlayInnerText = () =>
+  (playButton.innerText = `${difficultySelect.selectedOptions[0].innerText} (${categorySelect.selectedOptions[0].innerText})`)
 
-  // pop a word out of the words array and generate a new word element with it
-  const newWordDiv = document.createElement('div')
-  newWordDiv.innerText = state.words.pop()
-  newWordDiv.classList.add('word')
-  newWordDiv.setAttribute('id', state.timeouts.length)
-  newWordDiv.style.animationDuration = `${dragSeconds}s`
-  newWordDiv.style.backgroundColor = `hsl(${getRandomNumber(360)}, 60%, 15%)`
+const clearGame = () => {
+  // clear out any word elements remaining on screen
+  const wordDivs = document.querySelectorAll('.word')
+  wordDivs.forEach((word) => destroyWord(word))
+  //clear interval, timeouts, input value, state stuff
+  clearInterval(state.gameId)
+  state.gameId = 0
+  typingInput.value = ''
+  state.timeouts.forEach((timeout) => clearTimeout(timeout))
+  // clear word elements
+  INIT_STATE.timeouts = []
+  INIT_STATE.words = []
+}
 
-  // drop word into a lane
-  const randomIndex = getRandomNumber(laneDivs.length)
-  laneDivs[randomIndex].appendChild(newWordDiv)
-
-  // create a gameover timeout that triggers at the same time the word completes its drop animation
-  state.timeouts.push(setTimeout(loseGame, dragMilliseconds))
+const loseGame = () => {
+  ripAudio.play()
+  loseDialog.showModal()
+  clearGame()
+}
+const winGame = () => {
+  winAudio.play()
+  winDialog.showModal()
+  clearGame()
 }
 
 /**
@@ -411,41 +428,25 @@ const destroyWord = (el) => {
   el.remove()
 }
 
-// overarching game thangs (need to label this properly)
-const buildCategories = () => {
-  for (const key in WORD_BANK) {
-    appendNewElement('option', categorySelect, key)
-  }
-}
-const buildDifficulties = () => {
-  for (const key in DIFFICULTY) {
-    appendNewElement('option', difficultySelect, key)
-  }
-}
-const setPlayInnerText = () =>
-  (playButton.innerText = `${difficultySelect.selectedOptions[0].innerText} (${categorySelect.selectedOptions[0].innerText})`)
+const spawnWord = () => {
+  const dragSeconds =
+    (state.delay / 200) * (1 + Math.random() / 2 + state.difficulty / 10) //random spice factor, sorry not sorry
+  const dragMilliseconds = dragSeconds * 1000
 
-const clearGame = () => {
-  clearInterval(state.gameId)
-  state.gameId = 0
-  const wordDivs = document.querySelectorAll('.word')
-  wordDivs.forEach((word) => destroyWord(word))
-  typingInput.value = ''
-  state.timeouts.forEach((timeout) => clearTimeout(timeout))
-  // clear word elements
-  INIT_STATE.timeouts = []
-  INIT_STATE.words = []
-}
+  // pop a word out of the words array and generate a new word element with it
+  const newWordDiv = document.createElement('div')
+  newWordDiv.innerText = state.words.pop()
+  newWordDiv.classList.add('word')
+  newWordDiv.setAttribute('id', state.timeouts.length)
+  newWordDiv.style.animationDuration = `${dragSeconds}s`
+  newWordDiv.style.backgroundColor = `hsl(${getRandomNumber(360)}, 60%, 15%)`
 
-const loseGame = () => {
-  ripAudio.play()
-  loseDialog.showModal()
-  clearGame()
-}
-const winGame = () => {
-  winAudio.play()
-  winDialog.showModal()
-  clearGame()
+  // drop word into a lane
+  const randomIndex = getRandomNumber(laneDivs.length)
+  laneDivs[randomIndex].appendChild(newWordDiv)
+
+  // create a gameover timeout that triggers at the same time the word completes its drop animation
+  state.timeouts.push(setTimeout(loseGame, dragMilliseconds))
 }
 
 const runGame = () => {
@@ -485,6 +486,8 @@ const init = () => {
   menuDialog.showModal()
 }
 
+// DONE COOKING
+
 // pre-init stuff - is there even such a thing as pre-init? revisit this later
 buildCategories()
 buildDifficulties()
@@ -492,6 +495,3 @@ categorySelect.options.selectedIndex = getRandomNumber(categorySelect.length) //
 
 // initialize game
 init()
-
-
-//helper class is a static class for repetitive actions/definitions
