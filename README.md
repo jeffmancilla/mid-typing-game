@@ -6,8 +6,7 @@ Built using HTML, CSS and vanilla JavaScript!
 
 ## Gameplay (2x speed)
 
-![ezgif com-video-to-gif](https://github.com/jeffmancilla/mid-typing-game/assets/54294370/502689ad-a045-4394-9417-573161303a0b)
-
+![ezgif com-resize](https://github.com/jeffmancilla/mid-typing-game/assets/54294370/eeabb15f-cafe-4e77-aacb-83d47cb8c163)
 
 ## How to Play
 
