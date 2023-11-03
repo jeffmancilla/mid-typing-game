@@ -4,7 +4,7 @@ Typing Game (not in the Project 1 list)
 
 A typing game where the player has to successfully type words falling from the top of the screen before they fall below the line at the bottom of the screen.
 
-The player is given a set amount of words and difficulty will increase over time (words fall faster, spawn interval shortens)
+The player is given a set amount of words to type. Word categories and difficulty settings can be changed.
 
 ## User Stories
 
@@ -24,68 +24,22 @@ The player is given a set amount of words and difficulty will increase over time
 
 ## Pseudocode for the overall game play.
 
-### Data
-
-- wordbank string[] of words, maybe from 'lorem ipsum' for starters
-- gameTime = 0
-- count = 0
-- difficulty = 1
-- words = string[] to keep track of words spawned
-
-### Cached Elements
-
-- text input
-- nodelist of flexColumns
-
-### Listeners
-
-- buttons - for starting the game
-- input - listen for keydown 'enter'
-
-### Functions
-
-- generateRandomNumber(number)
-  - use to pick out random words from the wordbank by passing in the length of the wordbank[] to generate a random position index
-- gameOver() - clearinterval
-- increaseDifficulty()
-  - increment velocity and interval based on gameTime value
-- spawnWord(velocity)
-  1. columnIndex = generateRandomNumber(numberOfLanes)
-  1. word = wordbank[generateRandomNumber(wordbank.length)]
-  1. createElement div
-     1. CSS style with transition/transform value based on velocity
-     1. setAttribute('id', 'w'+'index')
-  1. words.push(word)
-  1. setTimeout(gameOver, velocity)
-  1. flexboxColumn[columnIndex].appendChild(word)
-- inputHandler()
-  - word
-- destroyWord(w#)
-  1. element.remove(w#)
-  1. clearTimeout(w#)
-- runGame
-    1. spawnWord
-    1. increaseDifficulty
-
-### Init
-
-pre-init: user selects button to start game
-
-1. game initializes
-   1. set states
-      - velocity
-      - count
-      - difficulty
-      - interval
-   1. setInterval(runGame, interval)
-
-## Icebox stuff
-
-- end of level to give player a break before continuing to next level
-  - levels will have a set number of words to be typed
-- counter for words typed / score ?
-  - top 10 scores?
-- music ?
-- sound effects ?
-  - one for successfully typing words
-  - one for typing words that aren't on the screen
+1. build word categories (as select option elements) using word bank object in constants
+2. build difficulties  (as select option elements) using difficulty object in constants
+3. take player to main menu
+   - options submenu to read rules and change difficulty, word categories
+   - randomize button to quickly change difficulty and categories
+4. player starts game - load game is triggered
+5. load game looks at set categories and difficulties in order to:
+   - copy a randomized sort of the chosen word bank category
+   - set interval number
+   - start game loop via setInterval
+6. game runs: 
+   - interval determines both word spawn rate drop speed (with some calulation and variability)
+   - setTimeouts are generated for each wordspawn with delay equal to complete animation time
+      - setTimeouts will trigger a game over once set delay is realized (lose condition)
+   - successfully typing a word on screen will:
+       - remove the element
+       - clear respective timeout
+       - decrease word count
+   - if word count = 0, game ends and player wins (win condition)
