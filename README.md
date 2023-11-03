@@ -1,6 +1,13 @@
-A typing game heavy inspired by different typing games over the years (like [Mavis Beacon Teaches Typing](https://en.wikipedia.org/wiki/Mavis_Beacon_Teaches_Typing) and [Elden Ring](https://en.wikipedia.org/wiki/Elden_Ring)
+# Mid Typing Game
+
+A typing game heavily inspired by [Elden Ring](https://en.wikipedia.org/wiki/Elden_Ring) and different typing games like [Mavis Beacon Teaches Typing](https://en.wikipedia.org/wiki/Mavis_Beacon_Teaches_Typing).
 
 Built using HTML, CSS and vanilla JavaScript!
+
+## Gameplay (2x speed)
+
+![ezgif com-video-to-gif](https://github.com/jeffmancilla/mid-typing-game/assets/54294370/502689ad-a045-4394-9417-573161303a0b)
+
 
 ## How to Play
 
