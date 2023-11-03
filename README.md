@@ -1,13 +1,21 @@
-# mid-typing-game
+A typing game heavy inspired by different typing games over the years (like [Mavis Beacon Teaches Typing](https://en.wikipedia.org/wiki/Mavis_Beacon_Teaches_Typing) and [Elden Ring](https://en.wikipedia.org/wiki/Elden_Ring)
 
-☐ <Your game's title>: A description of your game. Background info of the game is a nice touch.
+Built using HTML, CSS and vanilla JavaScript!
 
-☐ Screenshot(s): Images of your actual game.
+## How to Play
 
-Note: if you edit your README.md on the github website editor, you can copy and paste image files directly to your markdown.
+[jeffmancilla.github.io/mid-typing-game](https://jeffmancilla.github.io/mid-typing-game/) (deployed with GitHub Pages)
 
-☐ Technologies Used: List of the technologies used, e.g., JavaScript, HTML, CSS...
+The player must type out falling words that appear on the screen. 
+Player wins when all words have been typed out of the screen, and loses when a word falls into the typing line.
 
-☐ Getting Started: In this section include the link to your deployed game and any instructions you deem important.
+Remember to browse through the options menu to set different word categories and difficulty settings!
 
-☐ Next Steps: Planned future enhancements (icebox items).
+## Future Enhancements
+
+- Remove the need for the player to press enter, space or tab / per-key character matching
+- Allow winning players to keep playing on a higher difficulty and adding on top of their current score (level system)
+- Expose timers and other game mechanics in the options menu, allowing for more ways to dial in game difficulty
+- A combo meter!
+- Switch out of Elden Ring soundboard audio assets
+- Logo for the game (add to title screen)

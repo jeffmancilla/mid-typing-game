@@ -319,7 +319,6 @@ bodyEl.addEventListener('keydown', (e) => {
     return
   }
   e.preventDefault()
-  console.log(e.key)
   // add key to text input element
   if (
     e.key.toLowerCase() === 'q' ||
@@ -375,7 +374,7 @@ bodyEl.addEventListener('keydown', (e) => {
 
 const spawnWord = () => {
   const dragSeconds =
-    state.delay / 200 * (1 + (Math.random() / 2) + (state.difficulty / 10)) //random spice factor, sorry not sorry
+    (state.delay / 200) * (1 + Math.random() / 2 + state.difficulty / 10) //random spice factor, sorry not sorry
   const dragMilliseconds = dragSeconds * 1000
 
   // pop a word out of the words array and generate a new word element with it
@@ -471,7 +470,6 @@ const loadGame = () => {
   // update ui elements
   levelDiv.innerText = categorySelect.selectedOptions[0].innerText
   scoreEls.forEach((el) => {
-    console.dir(el)
     el.innerText = state.score
   })
   //start game
@@ -494,3 +492,6 @@ categorySelect.options.selectedIndex = getRandomNumber(categorySelect.length) //
 
 // initialize game
 init()
+
+
+//helper class is a static class for repetitive actions/definitions
